@@ -12,7 +12,7 @@ var App = React.createClass({
 		return (
 			<div className='app'>
 				<MainHeader/>
-				<div className='main-content container'>
+				<div className='container'>
 					<RouteHandler/>
 				</div>
 			</div>

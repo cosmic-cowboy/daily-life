@@ -12,6 +12,7 @@
   "devDependencies": {
     "browserify": "^10.2.4",
     "es5-shim": "^4.1.7",
+    "jquery": "^2.1.4",
     "react": "^0.13.3",
     "react-router": "^0.13.3",
     "reactify": "^1.1.1",
