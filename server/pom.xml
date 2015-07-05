@@ -41,6 +41,12 @@
 			<artifactId>flyway-core</artifactId>
 		</dependency>
 
+		<!-- テンプレートエンジン -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+
 		<!-- ユーティリティとして使用 -->
 		<!-- http://mvnrepository.com/artifact/org.projectlombok/lombok -->
 		<dependency>

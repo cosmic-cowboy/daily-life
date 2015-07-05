@@ -1,0 +1,22 @@
+{
+  "name": "dairy-life-web-client",
+  "version": "1.0.0",
+  "description": "dairy-life-web-client",
+  "main": "app.js",
+  "scripts": {
+    "build": "browserify -t reactify app.js > ../resources/static/js/build/bundle.js --debug",
+    "watch": "watchify  -t reactify app.js -o ../resources/static/js/build/bundle.js --debug"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "browserify": "^10.2.4",
+    "es5-shim": "^4.1.7",
+    "jquery": "^2.1.4",
+    "react": "^0.13.3",
+    "react-router": "^0.13.3",
+    "reactify": "^1.1.1",
+    "uglify-js": "^2.4.23",
+    "watchify": "^3.2.3"
+  }
+}
