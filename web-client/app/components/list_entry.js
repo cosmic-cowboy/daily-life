@@ -29,8 +29,9 @@ var ListEntry = React.createClass({
 	render: function () {
 		var entries = this.state.data.map(function (entry) {
 			return (
-				<div>
+				<div className="entry">
 					<h4 className="text-center">{entry.postDate}</h4>
+					<hr/>
 					<p>{entry.content}</p>
 				</div>
 			);

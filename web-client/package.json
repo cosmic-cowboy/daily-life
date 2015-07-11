@@ -4,8 +4,8 @@
   "description": "dairy-life-web-client",
   "main": "app.js",
   "scripts": {
-    "build": "browserify -t reactify app.js > ../resources/static/js/build/bundle.js --debug",
-    "watch": "watchify  -t reactify app.js -o ../resources/static/js/build/bundle.js --debug"
+    "build": "browserify -t reactify app.js > ../server/src/main/resources/static/js/build/bundle.js --debug",
+    "watch": "watchify  -t reactify app.js -o ../server/src/main/resources/static/js/build/bundle.js --debug"
   },
   "author": "",
   "license": "ISC",
