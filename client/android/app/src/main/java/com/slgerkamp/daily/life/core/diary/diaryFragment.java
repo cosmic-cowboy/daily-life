@@ -2,6 +2,7 @@ package com.slgerkamp.daily.life.core.diary;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,13 +10,20 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 
+import com.google.common.collect.ImmutableList;
 import com.slgerkamp.daily.life.R;
+import com.slgerkamp.daily.life.generic.Backend;
+import com.slgerkamp.daily.life.infra.JSONData;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import rx.Observable;
+import rx.functions.Action1;
+import rx.functions.Func1;
 
 /**
  * <p>日記の一覧画面を管理するクラスです。
@@ -31,18 +39,13 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
 
     public DiaryFragment() {
         entityMap = new HashMap<>();
-        entityMap.put(0, new DiaryItem(new DiaryId(123456), "日記56", 123456));
-        entityMap.put(1, new DiaryItem(new DiaryId(123457), "日記57", 123457));
-        entityMap.put(2, new DiaryItem(new DiaryId(123458), "日記58", 123458));
-        entityMap.put(3, new DiaryItem(new DiaryId(123459), "日記59", 123459));
-        entityMap.put(4, new DiaryItem(new DiaryId(123460), "日記60", 123460));
     };
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        getEntry();
         diaryAdapter = new DiaryAdapter();
     }
 
@@ -95,5 +98,43 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
 
             return v;
         }
+    }
+
+    private void getEntry() {
+        new Backend(getActivity()).get("entry")
+                .toObservable()
+                .flatMap(new Func1<JSONData, Observable<List<JSONData>>>() {
+                    @Override
+                    public Observable<List<JSONData>> call(JSONData json) {
+                        return json.getList("entryList");
+                    }
+                })
+                .map(new Func1<List<JSONData>, List<DiaryItem>>() {
+                    @Override
+                    public List<DiaryItem> call(List<JSONData> jsonData) {
+
+                        ImmutableList.Builder<DiaryItem> builder = new ImmutableList.Builder<>();
+                        for (JSONData d : jsonData) {
+                            DiaryItem item = DiaryItem.fromJSON(d).toBlocking().lastOrDefault(null);
+                            if (item != null) {
+                                builder.add(item);
+                            } else {
+                                Log.e(DiaryFragment.class.getSimpleName(), "invalid data: " + d);
+                            }
+                        }
+                        return builder.build();
+                    }
+                })
+                .subscribe(new Action1<List<DiaryItem>>() {
+                    @Override
+                    public void call(List<DiaryItem> diaryItems) {
+
+                        for(int i = 0; i <  diaryItems.size(); i++){
+                            Log.d("JSON:", diaryItems.get(i).toString());
+                            entityMap.put(i, diaryItems.get(i));
+                        }
+                        diaryAdapter.notifyDataSetChanged();
+                    }
+                });
     }
 }

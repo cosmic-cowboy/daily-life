@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:title="@string/diary_list"
-        app:theme="@style/AppToolBar"
+        android:theme="@style/AppToolBar"
         app:popupTheme="@style/AppTheme"
         android:elevation="4dp"/>
 
