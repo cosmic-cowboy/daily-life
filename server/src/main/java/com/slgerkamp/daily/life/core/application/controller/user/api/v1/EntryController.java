@@ -1,7 +1,7 @@
 package com.slgerkamp.daily.life.core.application.controller.user.api.v1;
 
 import java.util.Collections;
-import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.common.collect.ImmutableMap;
 import com.slgerkamp.daily.life.core.domain.EntryService;
 import com.slgerkamp.daily.life.core.domain.entity.Entry;
 import com.slgerkamp.daily.life.generic.application.PathHelper;
@@ -42,8 +43,10 @@ public class EntryController {
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.GET)
-	public List<Entry> list() {
-		return entryService.findAll();
+	public Map<String, Object> list() {
+		return new ImmutableMap.Builder<String, Object>()
+				.put("entryList", entryService.findAll())
+				.build();
 	}
 
 	/**

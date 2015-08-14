@@ -22,7 +22,7 @@ var ListEntry = React.createClass({
 	_onReload : function() {
 		var self = this;
 		service.api("/user/api/v1/entry").get({},"json").done(function(data) {
-			self.setState({data:data});
+			self.setState({data:data.entryList});
 		});
 	},
 
