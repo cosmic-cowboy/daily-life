@@ -3,11 +3,14 @@ package com.slgerkamp.daily.life.generic;
 import android.app.Activity;
 import android.util.Log;
 
+import com.google.common.collect.ImmutableMap;
 import com.slgerkamp.daily.life.infra.JSONData;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.HttpUrl;
+import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
 import org.json.JSONObject;
@@ -63,6 +66,36 @@ public class Backend {
         }
     }
 
+
+    public Post post(String path) {
+        return new Post(path.split("/"));
+    }
+    public class Post {
+        private final Request.Builder builder;
+        private final ImmutableMap.Builder<String, Object> params = new ImmutableMap.Builder<>();
+
+        public Post(String[] path) {
+            HttpUrl.Builder builder = builder();
+            for (String p : path) builder.addPathSegment(p);
+            this.builder = new Request.Builder().url(builder.build());
+        }
+
+        public Post param(String key, String value) {
+            params.put(key, value);
+            return this;
+        }
+
+        public Observable<JSONData> toObservable() {
+            RequestBody body = RequestBody.create(
+                    MediaType.parse("application/json"),
+                    new JSONObject(params.build()).toString()
+            );
+            Request req = builder
+                    .post(body)
+                    .build();
+            return Observable.just(req).flatMap(new RequestExecutor());
+        }
+    }
 
 
 

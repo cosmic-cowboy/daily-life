@@ -1,0 +1,36 @@
+<android.support.v7.widget.GridLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/diary_edit_page"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:screenOrientation="portrait"
+    tools:context="com.slgerkamp.daily.life.core.diary.DiaryEditActivity"
+    app:columnCount="1"
+    app:rowCount="2">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        app:layout_row="0"
+        app:layout_column="0"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:background="@color/nav_bar"
+        android:title="@string/action_edit_diary"
+        android:theme="@style/AppToolBar"
+        app:popupTheme="@style/AppTheme"
+        android:elevation="4dp" />
+
+    <EditText
+        android:id="@+id/message_input"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_row="1"
+        app:layout_column="0"
+        android:background="@color/edit_background"
+        android:inputType="textMultiLine"
+        android:scrollbars="vertical"
+        />
+
+</android.support.v7.widget.GridLayout>
