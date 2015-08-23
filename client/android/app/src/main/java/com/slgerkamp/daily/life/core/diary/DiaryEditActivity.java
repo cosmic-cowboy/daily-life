@@ -1,6 +1,7 @@
 package com.slgerkamp.daily.life.core.diary;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -9,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
+import com.slgerkamp.daily.life.MainActivity;
 import com.slgerkamp.daily.life.R;
 import com.slgerkamp.daily.life.generic.Backend;
 import com.slgerkamp.daily.life.infra.JSONData;
@@ -56,6 +58,8 @@ public class DiaryEditActivity extends AppCompatActivity {
             // 保存ボタン
             case R.id.post_newDiary:
                 postEntry(editText.getText().toString());
+                Intent refresh = new Intent(this, MainActivity.class);
+                startActivity(refresh);
                 finish();
                 return true;
         }
