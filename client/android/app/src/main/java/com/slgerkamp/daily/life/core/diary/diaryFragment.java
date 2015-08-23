@@ -1,7 +1,9 @@
 package com.slgerkamp.daily.life.core.diary;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +33,7 @@ import rx.functions.Func1;
 public class DiaryFragment extends Fragment implements AbsListView.OnItemClickListener {
 
     @InjectView(android.R.id.list) AbsListView listView;
+    @InjectView(R.id.first_fab) FloatingActionButton fab;
 
     private DiaryAdapter diaryAdapter;
 
@@ -54,6 +57,14 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
         View view = inflater.inflate(R.layout.diary_fragment, container, false);
 
         ButterKnife.inject(this, view);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), DiaryEditActivity.class);
+                getActivity().startActivity(intent);
+            }
+        });
 
         listView.setAdapter(diaryAdapter);
 

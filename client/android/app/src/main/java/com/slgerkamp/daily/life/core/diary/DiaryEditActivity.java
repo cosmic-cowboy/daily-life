@@ -48,11 +48,16 @@ public class DiaryEditActivity extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        if (id == R.id.post_newDiary) {
-            postEntry(editText.getText().toString());
-            return true;
+        switch(item.getItemId()) {
+            // ホームボタン
+            case android.R.id.home:
+                finish();
+                return true;
+            // 保存ボタン
+            case R.id.post_newDiary:
+                postEntry(editText.getText().toString());
+                finish();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);

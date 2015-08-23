@@ -27,4 +27,5 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.4.0'
     compile 'io.reactivex:rxandroid:0.24.0'
     compile 'com.google.guava:guava:18.0'
+    compile 'com.android.support:design:22.2.0'
 }
