@@ -5,4 +5,5 @@
     <string name="action_edit_diary">日記編集</string>
     <string name="action_settings">設定</string>
     <string name="button_save">保存</string>
+    <string name="new_diary_edit_text_hint">新しい日記を作成する</string>
 </resources>
