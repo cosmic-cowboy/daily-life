@@ -36,7 +36,7 @@ public class EntryController {
 	EntryRepository.Factory entryRepositoryFactory;
 
 	/**
-	 * 日記を閲覧する。
+	 * <p>日記を閲覧する。
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.GET)
@@ -55,7 +55,7 @@ public class EntryController {
 	}
 
 	/**
-	 * 日記を投稿する。
+	 * <p>日記を投稿する。
 	 * @param entry
 	 */
 	@RequestMapping(method = RequestMethod.POST)
@@ -68,8 +68,8 @@ public class EntryController {
 	}
 
 	/**
-	 * 日記を削除する。
-	 * @param entry
+	 * <p>日記を削除する。
+	 * @param messegeId
 	 */
 	@RequestMapping(method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
