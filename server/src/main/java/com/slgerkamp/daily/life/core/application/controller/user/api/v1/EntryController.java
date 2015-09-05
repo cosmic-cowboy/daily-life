@@ -1,6 +1,7 @@
 package com.slgerkamp.daily.life.core.application.controller.user.api.v1;
 
 import java.util.List;
+import java.io.InputStream;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,5 +77,26 @@ public class EntryController {
 	public void delete(@RequestParam Long messegeId) {
 		entryRepositoryFactory.create().delete(messegeId);
 	}
+
+	/**
+	 * <p>画像を投稿する。
+	 * @param entry
+	 */
+	@RequestMapping(value = "/image", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.CREATED)
+	public long uploadImage(InputStream input) {
+		return 0L;
+	}
+
+	/**
+	 * <p>画像を削除する。
+	 * @param entry
+	 */
+	@RequestMapping(value = "/image", method = RequestMethod.DELETE)
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void deleteImage(@RequestParam Long fileId) {
+
+	}
+
 
 }
