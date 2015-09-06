@@ -21,4 +21,8 @@ spring:
 
     mail:
       host: localhost
-      port: 2525
+      port: 10025
+
+dailylife.file:
+    tmpstorage: /var/dailylife/tmpstorage
+    storage: /var/dailylife/storage
