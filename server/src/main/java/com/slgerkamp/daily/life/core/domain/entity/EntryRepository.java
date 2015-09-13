@@ -2,18 +2,13 @@ package com.slgerkamp.daily.life.core.domain.entity;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Component;
 
 import com.querydsl.sql.dml.SQLDeleteClause;
 import com.querydsl.sql.dml.SQLInsertClause;
 import com.slgerkamp.daily.life.db.query.QEntry;
-import com.slgerkamp.daily.life.infra.message.EmailService;
-import com.slgerkamp.daily.life.infra.message.Message;
-import com.slgerkamp.daily.life.infra.message.ThymeleafMessageContent;
 import com.slgerkamp.daily.life.infra.message.db.DbService;
 
 /**
@@ -26,10 +21,8 @@ import com.slgerkamp.daily.life.infra.message.db.DbService;
 public final class EntryRepository {
 
 	private final DbService dbService;
-	private final EmailService emailService;
-	private EntryRepository(DbService dbService, EmailService emailService) {
+	private EntryRepository(DbService dbService) {
 		this.dbService = dbService;
-		this.emailService = emailService;
 	}
 
 	/**
@@ -40,11 +33,9 @@ public final class EntryRepository {
 	public static class Factory {
 		@Autowired
 		private DbService dbService;
-		@Autowired
-		private EmailService emailService;
 
 		public EntryRepository create() {
-			return new EntryRepository(dbService, emailService);
+			return new EntryRepository(dbService);
 		}
 
 	}
@@ -69,15 +60,6 @@ public final class EntryRepository {
 				.set(e.postDate, now);
 
 		insert.execute();
-
-		// メール送信（TODO イベント駆動にして、メール送信専用のhandlerクラスを作成する）
-		SimpleMailMessage simpleMessage =  Message.build(message -> {
-				message.sender("dummy@dummy.com");
-				message.addresses(Collections.singletonList("dummy@dummy.com"));
-				message.subject("dummy");
-				message.content(new ThymeleafMessageContent());
-			});
-		emailService.send(Collections.singletonList(simpleMessage));
 
 		return messageId;
 
