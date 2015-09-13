@@ -28,14 +28,6 @@ public class QFile extends com.querydsl.sql.RelationalPathBase<QFile> {
 
     public final NumberPath<Long> fileId = createNumber("fileId", Long.class);
 
-    public final NumberPath<Integer> imageHeight = createNumber("imageHeight", Integer.class);
-
-    public final NumberPath<Integer> imageWidth = createNumber("imageWidth", Integer.class);
-
-    public final NumberPath<Long> length = createNumber("length", Long.class);
-
-    public final StringPath mimeType = createString("mimeType");
-
     public final com.querydsl.sql.PrimaryKey<QFile> constraint2 = createPrimaryKey(fileId);
 
     public QFile(String variable) {
@@ -59,12 +51,8 @@ public class QFile extends com.querydsl.sql.RelationalPathBase<QFile> {
     }
 
     public void addMetadata() {
-        addMetadata(createDate, ColumnMetadata.named("CREATE_DATE").withIndex(4).ofType(Types.TIMESTAMP).withSize(23).withDigits(10).notNull());
+        addMetadata(createDate, ColumnMetadata.named("CREATE_DATE").withIndex(2).ofType(Types.TIMESTAMP).withSize(23).withDigits(10).notNull());
         addMetadata(fileId, ColumnMetadata.named("FILE_ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
-        addMetadata(imageHeight, ColumnMetadata.named("IMAGE_HEIGHT").withIndex(6).ofType(Types.INTEGER).withSize(10));
-        addMetadata(imageWidth, ColumnMetadata.named("IMAGE_WIDTH").withIndex(5).ofType(Types.INTEGER).withSize(10));
-        addMetadata(length, ColumnMetadata.named("LENGTH").withIndex(3).ofType(Types.BIGINT).withSize(19).notNull());
-        addMetadata(mimeType, ColumnMetadata.named("MIME_TYPE").withIndex(2).ofType(Types.CLOB).withSize(2147483647).notNull());
     }
 
 }
