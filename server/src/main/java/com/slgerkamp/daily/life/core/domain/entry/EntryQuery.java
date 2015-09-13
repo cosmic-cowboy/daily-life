@@ -1,4 +1,4 @@
-package com.slgerkamp.daily.life.core.domain.entity;
+package com.slgerkamp.daily.life.core.domain.entry;
 
 import java.sql.Timestamp;
 
