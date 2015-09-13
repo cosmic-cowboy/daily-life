@@ -1,11 +1,14 @@
 server:
     port: 9000
-    
+
 management:
     address: 127.0.0.1
     port: 9100
-    
-    
+
+logging:
+    level:
+        com.slgerkamp.daily.life: DEBUG
+
 spring:
     datasource:
         driverClassName: org.h2.Driver
@@ -15,7 +18,7 @@ spring:
     jpa:
         hibernate.ddl-auto: validate
     thymeleaf.cache: false
-    
+
     mail:
       host: localhost
       port: 2525

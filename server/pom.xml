@@ -16,6 +16,7 @@
 
 	<properties>
 		<java.version>1.8</java.version>
+		<querydsl.version>4.0.4</querydsl.version>
 	</properties>
 	
 	<!-- ================================================================ -->
@@ -25,6 +26,13 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		
+		<!-- DB関連 ORマッパーで使用 -->
+		<dependency>
+			<groupId>com.querydsl</groupId>
+			<artifactId>querydsl-sql</artifactId>
+			<version>${querydsl.version}</version>
 		</dependency>
 		
 		<!-- DB関連 マイグレーションで使用 -->
@@ -98,7 +106,32 @@
 					<skipTests>true</skipTests>
 				</configuration>
 			</plugin>
-	
+
+			<!--
+				m2eclipse で自動生成のソースを認識させるための設定
+				
+				ここでは追加するソースディレクトリを指定しています。
+				共通設定は lifecycle-mapping プラグインの設定で行います。
+			-->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>add-source</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>${project.basedir}/src/generated-sources/java</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
@@ -129,11 +162,101 @@
 				</dependencies>
 			</plugin>
 		</plugins>
-	</build>
 
-    <!-- ================================================================ -->
-    <!--     共通設定                                                     -->
-    <!-- ================================================================ -->
+		<pluginManagement>
+			<plugins>
+			
+				<!-- Eclipse (m2eclipse) 設定 -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<!--
+								自動生成のソースを認識させるための設定
+								
+								追加するソースディレクトリの指定は build-helper-maven-plugin
+								の設定で行います。
+								-->
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.codehaus.mojo</groupId>
+										<artifactId>build-helper-maven-plugin</artifactId>
+										<versionRange>[1.8,)</versionRange>
+										<goals><goal>add-source</goal></goals>
+									</pluginExecutionFilter>
+									<action>
+										<execute>
+											<runOnConfiguration>true</runOnConfiguration>
+											<runOnIncremental>true</runOnIncremental>
+										</execute>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
+	</build>
+	<!-- SQL のクエリクラスの自動生成 -->
+	<profiles>
+		<profile>
+			<id>generate-query</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<!-- 
+					   SQL のクエリクラスの自動生成に使用します。
+					   http://blog.mysema.com/2011/01/querying-in-sql-with-querydsl.html
+					-->
+					<plugin>
+						<groupId>com.querydsl</groupId>
+						<artifactId>querydsl-maven-plugin</artifactId>
+						<version>${querydsl.version}</version>
+						<configuration>
+							<jdbcDriver>org.h2.Driver</jdbcDriver>
+							<jdbcUrl>jdbc:h2:file:/tmp/dailyLife</jdbcUrl>
+							<jdbcUser>sa</jdbcUser>
+							<jdbcPassword></jdbcPassword>
+							<targetFolder>${project.basedir}/src/generated-sources/java</targetFolder>
+						</configuration>
+						<dependencies>
+						<!-- 通常の依存関係を見てくれないので、ドライバを別に指定します。 -->
+							<dependency>
+								<groupId>com.h2database</groupId>
+								<artifactId>h2</artifactId>
+								<version>1.4.188</version>
+							</dependency>
+							<dependency>
+								<groupId>org.slf4j</groupId>
+								<artifactId>slf4j-log4j12</artifactId>
+								<version>1.7.12</version>
+							</dependency>
+						</dependencies>
+						<executions>
+							<execution>
+								<id>export-tables</id>
+								<goals> <goal>export</goal> </goals>
+								<configuration>
+									<packageName>${project.groupId}.db.query</packageName>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>  
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+	<!-- ================================================================ -->
+	<!--     共通設定                                                     -->
+	<!-- ================================================================ -->
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
