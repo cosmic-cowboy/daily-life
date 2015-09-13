@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.google.common.base.Throwables;
+import com.slgerkamp.daily.life.infra.fileio.FileId;
+import com.slgerkamp.daily.life.infra.fileio.FileRepository;
 import com.slgerkamp.daily.life.infra.fileio.image.ImageFormat;
 import com.slgerkamp.daily.life.infra.fileio.temp.TempDirectorySession;
 import com.slgerkamp.daily.life.infra.fileio.temp.TempFileId;
@@ -28,10 +30,12 @@ import com.slgerkamp.daily.life.infra.fileio.temp.TempFileStorage;
 @Component
 public class ImageRegistrationService {
 
-	private TempFileStorage tempFileStorage;
+	private final TempFileStorage tempFileStorage;
+	private final FileRepository repository;
 
 	@Autowired
-	public ImageRegistrationService(TempFileStorage tempFileStorage) {
+	public ImageRegistrationService(FileRepository repository, TempFileStorage tempFileStorage) {
+		this.repository = repository;
 		this.tempFileStorage = tempFileStorage;
 	}
 	/**
@@ -56,16 +60,15 @@ public class ImageRegistrationService {
 		}
 
 	}
-//	/**
-//	 * <p>画像ファイルを登録します。
-//	 * @param input
-//	 */
-//	public File	commit(TempFileId tempFileId){
-//
-//		// DBへの登録
-//		// ストレージへの登録
-//
-//	}
+	/**
+	 * <p>画像ファイルを登録します。
+	 * @param input
+	 */
+	public FileId commit(TempFileId tempFileId) {
+		InputStream in = tempFileStorage.read(tempFileId);
+		tempFileStorage.delete(tempFileId);
+		return repository.register(in);
+	}
 
 	// ----------------------------------------------------------------
 	//    内部処理

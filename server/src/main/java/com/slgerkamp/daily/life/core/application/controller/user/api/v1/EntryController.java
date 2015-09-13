@@ -19,6 +19,10 @@ import com.slgerkamp.daily.life.core.domain.entity.EntryQuery;
 import com.slgerkamp.daily.life.core.domain.entity.EntryRepository;
 import com.slgerkamp.daily.life.core.domain.entity.MessageId;
 import com.slgerkamp.daily.life.generic.application.PathHelper;
+import com.slgerkamp.daily.life.generic.domain.file.IllegalFileException;
+import com.slgerkamp.daily.life.generic.domain.file.ImageRegistrationService;
+import com.slgerkamp.daily.life.infra.fileio.FileId;
+import com.slgerkamp.daily.life.infra.fileio.temp.TempFileId;
 import com.slgerkamp.daily.life.infra.message.db.query.JsonProjection;
 
 
@@ -36,6 +40,9 @@ public class EntryController {
 
 	@Autowired
 	EntryRepository.Factory entryRepositoryFactory;
+
+	@Autowired
+	ImageRegistrationService imageRegistrationService;
 
 	/**
 	 * <p>日記を閲覧する。
@@ -83,11 +90,16 @@ public class EntryController {
 	/**
 	 * <p>画像を投稿する。
 	 * @param entry
+	 * @throws IllegalFileException
 	 */
 	@RequestMapping(value = "/image", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public long uploadImage(InputStream input) {
-		return 0L;
+	public Map<String, Object> uploadImage(InputStream input) throws IllegalFileException {
+		TempFileId tempFileId = imageRegistrationService.submit(input);
+		FileId fileId = imageRegistrationService.commit(tempFileId);
+		return new ImmutableMap.Builder<String, Object>()
+				.put("fileId", fileId.longValue())
+				.build();
 	}
 
 	/**

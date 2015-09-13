@@ -2,6 +2,7 @@ package com.slgerkamp.daily.life.generic.domain.file;
 
 import java.io.File;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +11,7 @@ import com.slgerkamp.daily.life.infra.fileio.FileRepository;
 import com.slgerkamp.daily.life.infra.fileio.storage.FileStorage;
 import com.slgerkamp.daily.life.infra.fileio.storage.LocalFileStorage;
 import com.slgerkamp.daily.life.infra.fileio.temp.TempFileStorage;
+import com.slgerkamp.daily.life.infra.message.db.DbService;
 
 /**
  * <p>ファイルに関連する定義を初期設定するクラスです。
@@ -24,9 +26,10 @@ public class FileConfiguration {
 	@Value("${dailylife.file.tmpstorage}")
 	private String tmpStoragePath;
 
+	@Autowired
 	@Bean
-	FileRepository getFileRepository() {
-		return new FileRepository(createStorage(storagePath));
+	FileRepository getFileRepository(DbService dbService) {
+		return new FileRepository(dbService, createStorage(storagePath));
 	}
 
 	@Bean
