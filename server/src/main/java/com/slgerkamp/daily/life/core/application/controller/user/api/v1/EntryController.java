@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.common.collect.ImmutableMap;
 import com.slgerkamp.daily.life.core.domain.entity.EntryQuery;
 import com.slgerkamp.daily.life.core.domain.entity.EntryRepository;
+import com.slgerkamp.daily.life.core.domain.entity.MessageId;
 import com.slgerkamp.daily.life.generic.application.PathHelper;
 import com.slgerkamp.daily.life.infra.message.db.query.JsonProjection;
 
@@ -62,20 +63,21 @@ public class EntryController {
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	public Map<String, Object> post(@RequestBody String content) {
-		long messageId = entryRepositoryFactory.create().create(content);
+		MessageId messageId = entryRepositoryFactory.create().create(content);
 		return new ImmutableMap.Builder<String, Object>()
-				.put("messageId", messageId)
+				.put("messageId", messageId.longValue())
 				.build();
 	}
 
 	/**
 	 * <p>日記を削除する。
-	 * @param messegeId
+	 * @param messageId
 	 */
 	@RequestMapping(method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void delete(@RequestParam Long messegeId) {
-		entryRepositoryFactory.create().delete(messegeId);
+	public void delete(@RequestParam Long messageId) {
+
+		entryRepositoryFactory.create().delete(new MessageId(messageId));
 	}
 
 	/**
