@@ -13,6 +13,7 @@ import android.widget.EditText;
 import com.slgerkamp.daily.life.MainActivity;
 import com.slgerkamp.daily.life.R;
 import com.slgerkamp.daily.life.generic.Backend;
+import com.slgerkamp.daily.life.generic.ImageSelectionWizard;
 import com.slgerkamp.daily.life.infra.JSONData;
 
 import java.util.Date;
@@ -54,6 +55,12 @@ public class DiaryEditActivity extends AppCompatActivity {
             // ホームボタン
             case android.R.id.home:
                 finish();
+                return true;
+            //
+            case R.id.open_image_dialog:
+                ImageSelectionWizard wizard = ImageSelectionWizard.create(100);
+                wizard.show(getFragmentManager(), MainActivity.class.getSimpleName());
+
                 return true;
             // 保存ボタン
             case R.id.post_newDiary:

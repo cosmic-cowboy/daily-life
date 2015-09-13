@@ -10,6 +10,7 @@ import com.querydsl.sql.dml.SQLDeleteClause;
 import com.querydsl.sql.dml.SQLInsertClause;
 import com.slgerkamp.daily.life.db.query.QEntry;
 import com.slgerkamp.daily.life.infra.message.db.DbService;
+import com.slgerkamp.daily.life.infra.utils.CommonUtils;
 
 /**
  * <p>日記のエントリ情報を登録・更新・削除するためのクエリクラスです。
@@ -43,15 +44,15 @@ public final class EntryRepository {
 	/**
 	 * <p>日記エントリを作成します。
 	 */
-	public long create(final String content) {
+	public MessageId create(final String content) {
 
 		// 登録情報の整理
 		final Timestamp now = Timestamp.from(Instant.now());
-		final long messageId = now.getTime();
+		final MessageId messageId = new MessageId(CommonUtils.getUniqueId());
 		// 登録
 		QEntry e = QEntry.entry;
 		SQLInsertClause insert = dbService.insert(e)
-				.set(e.messageId, messageId)
+				.set(e.messageId, messageId.longValue())
 				.set(e.content, content)
 				.set(e.createDate, now)
 				.set(e.updateDate, now)
@@ -66,11 +67,11 @@ public final class EntryRepository {
 	/**
 	 * <p>日記エントリを削除します。
 	 */
-	public void delete(final long messegeId) {
+	public void delete(final MessageId messageId) {
 
 		QEntry e = QEntry.entry;
 		SQLDeleteClause delete = dbService.delete(e)
-				.where(e.messageId.eq(messegeId));
+				.where(e.messageId.eq(messageId.longValue()));
 		delete.execute();
 
 	}

@@ -1,6 +1,7 @@
 package com.slgerkamp.daily.life.core.application.controller.user.api.v1;
 
 import java.util.List;
+import java.io.InputStream;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.common.collect.ImmutableMap;
 import com.slgerkamp.daily.life.core.domain.entity.EntryQuery;
 import com.slgerkamp.daily.life.core.domain.entity.EntryRepository;
+import com.slgerkamp.daily.life.core.domain.entity.MessageId;
 import com.slgerkamp.daily.life.generic.application.PathHelper;
+import com.slgerkamp.daily.life.generic.domain.file.IllegalFileException;
+import com.slgerkamp.daily.life.generic.domain.file.ImageRegistrationService;
+import com.slgerkamp.daily.life.infra.fileio.FileId;
+import com.slgerkamp.daily.life.infra.fileio.temp.TempFileId;
 import com.slgerkamp.daily.life.infra.message.db.query.JsonProjection;
 
 
@@ -35,8 +41,11 @@ public class EntryController {
 	@Autowired
 	EntryRepository.Factory entryRepositoryFactory;
 
+	@Autowired
+	ImageRegistrationService imageRegistrationService;
+
 	/**
-	 * 日記を閲覧する。
+	 * <p>日記を閲覧する。
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.GET)
@@ -55,26 +64,53 @@ public class EntryController {
 	}
 
 	/**
-	 * 日記を投稿する。
+	 * <p>日記を投稿する。
 	 * @param entry
 	 */
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	public Map<String, Object> post(@RequestBody String content) {
-		long messageId = entryRepositoryFactory.create().create(content);
+		MessageId messageId = entryRepositoryFactory.create().create(content);
 		return new ImmutableMap.Builder<String, Object>()
-				.put("messageId", messageId)
+				.put("messageId", messageId.longValue())
 				.build();
 	}
 
 	/**
-	 * 日記を削除する。
-	 * @param entry
+	 * <p>日記を削除する。
+	 * @param messageId
 	 */
 	@RequestMapping(method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void delete(@RequestParam Long messegeId) {
-		entryRepositoryFactory.create().delete(messegeId);
+	public void delete(@RequestParam Long messageId) {
+
+		entryRepositoryFactory.create().delete(new MessageId(messageId));
 	}
+
+	/**
+	 * <p>画像を投稿する。
+	 * @param entry
+	 * @throws IllegalFileException
+	 */
+	@RequestMapping(value = "/image", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.CREATED)
+	public Map<String, Object> uploadImage(InputStream input) throws IllegalFileException {
+		TempFileId tempFileId = imageRegistrationService.submit(input);
+		FileId fileId = imageRegistrationService.commit(tempFileId);
+		return new ImmutableMap.Builder<String, Object>()
+				.put("fileId", fileId.longValue())
+				.build();
+	}
+
+	/**
+	 * <p>画像を削除する。
+	 * @param entry
+	 */
+	@RequestMapping(value = "/image", method = RequestMethod.DELETE)
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void deleteImage(@RequestParam Long fileId) {
+
+	}
+
 
 }

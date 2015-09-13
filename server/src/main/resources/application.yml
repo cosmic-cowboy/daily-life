@@ -12,7 +12,7 @@ logging:
 spring:
     datasource:
         driverClassName: org.h2.Driver
-        url: jdbc:h2:file:/tmp/dailyLife
+        url: jdbc:h2:file:/tmp/h2-dailyLife
         username: sa
         password:
     jpa:
@@ -21,4 +21,8 @@ spring:
 
     mail:
       host: localhost
-      port: 2525
+      port: 10025
+
+dailylife.file:
+    tmpstorage: /tmp/dailylife/tmpstorage
+    storage: /tmp/dailylife/storage

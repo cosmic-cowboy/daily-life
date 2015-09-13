@@ -30,7 +30,7 @@ public class Backend {
     private static final OkHttpClient client = new OkHttpClient();
 
     // TODO ここらへんは固定値ならvalueに移行する
-    private static final String domain = "172.20.10.5";
+    private static final String domain = "192.168.58.1";
     private static final boolean secure = false;
     private static final int port = 9000;
     private static final String pathPrefix = "/user/api/v1";
