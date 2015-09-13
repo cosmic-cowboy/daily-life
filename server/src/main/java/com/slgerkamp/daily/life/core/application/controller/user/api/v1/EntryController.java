@@ -1,8 +1,10 @@
 package com.slgerkamp.daily.life.core.application.controller.user.api.v1;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.SimpleMailMessage;
@@ -17,10 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.common.collect.ImmutableMap;
 import com.slgerkamp.daily.life.core.domain.EntryService;
 import com.slgerkamp.daily.life.core.domain.entity.Entry;
+import com.slgerkamp.daily.life.core.domain.entity.EntryQuery;
 import com.slgerkamp.daily.life.generic.application.PathHelper;
 import com.slgerkamp.daily.life.infra.message.EmailService;
 import com.slgerkamp.daily.life.infra.message.Message;
 import com.slgerkamp.daily.life.infra.message.ThymeleafMessageContent;
+import com.slgerkamp.daily.life.infra.message.db.query.JsonProjection;
 
 
 /**
@@ -32,11 +36,16 @@ import com.slgerkamp.daily.life.infra.message.ThymeleafMessageContent;
 @RequestMapping(PathHelper.USER_API_V1 + "/entry")
 public class EntryController {
 
+	private static final Logger LOGGER = Logger.getLogger(EntryController.class);
+
 	@Autowired
 	EntryService entryService;
 
 	@Autowired
 	EmailService emailService;
+
+	@Autowired
+	EntryQuery.Factory entryFactory;
 
 	/**
 	 * 日記を閲覧する。
@@ -44,8 +53,16 @@ public class EntryController {
 	 */
 	@RequestMapping(method = RequestMethod.GET)
 	public Map<String, Object> list() {
+
+		EntryQuery query = entryFactory.create();
+		List<Map<String, Object>> list =
+				query.select().list(
+						new JsonProjection()
+							.put("postDate", query.postDate())
+							.put("content", query.content())
+				);
 		return new ImmutableMap.Builder<String, Object>()
-				.put("entryList", entryService.findAll())
+				.put("entryList", list)
 				.build();
 	}
 
