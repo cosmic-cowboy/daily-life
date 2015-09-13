@@ -51,9 +51,7 @@ public final class EntryRepository {
 		// 登録
 		QEntry e = QEntry.entry;
 		SQLInsertClause insert = dbService.insert(e)
-				.set(e.userId, 1111L)
 				.set(e.messageId, messageId)
-				.set(e.messageType, "日記")
 				.set(e.content, content)
 				.set(e.createDate, now)
 				.set(e.updateDate, now)
