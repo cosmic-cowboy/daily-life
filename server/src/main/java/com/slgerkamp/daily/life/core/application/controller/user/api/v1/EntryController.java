@@ -55,6 +55,7 @@ public class EntryController {
 		List<Map<String, Object>> list =
 				query.select().list(
 						new JsonProjection()
+							.put("entryId", query.entryId())
 							.put("postDate", query.postDate())
 							.put("content", query.content())
 				);

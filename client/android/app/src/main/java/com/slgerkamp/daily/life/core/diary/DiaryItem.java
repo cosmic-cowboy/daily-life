@@ -25,14 +25,14 @@ public class DiaryItem {
 
     public static Observable<DiaryItem> fromJSON(JSONData d) {
         return Observable.zip(
-                d.getLong("messageId").flatMap(new Func1<Long, Observable<DiaryId>>() {
+                d.getLong("entryId").flatMap(new Func1<Long, Observable<DiaryId>>() {
                     @Override
                     public Observable<DiaryId> call(Long l) {
                         return DiaryId.from(l);
                     }
                 }),
                 d.getString("content"),
-                d.getLong("updateDate"),
+                d.getLong("postDate"),
                 new Func3<DiaryId, String, Long, DiaryItem>() {
                     @Override
                     public DiaryItem call(DiaryId a1, String a2, Long a3) {
