@@ -30,13 +30,9 @@ public class QEntry extends com.querydsl.sql.RelationalPathBase<QEntry> {
 
     public final NumberPath<Long> messageId = createNumber("messageId", Long.class);
 
-    public final StringPath messageType = createString("messageType");
-
     public final DateTimePath<java.sql.Timestamp> postDate = createDateTime("postDate", java.sql.Timestamp.class);
 
     public final DateTimePath<java.sql.Timestamp> updateDate = createDateTime("updateDate", java.sql.Timestamp.class);
-
-    public final NumberPath<Long> userId = createNumber("userId", Long.class);
 
     public final com.querydsl.sql.PrimaryKey<QEntry> constraint3 = createPrimaryKey(messageId);
 
@@ -61,13 +57,11 @@ public class QEntry extends com.querydsl.sql.RelationalPathBase<QEntry> {
     }
 
     public void addMetadata() {
-        addMetadata(content, ColumnMetadata.named("CONTENT").withIndex(4).ofType(Types.VARCHAR).withSize(2147483647).notNull());
-        addMetadata(createDate, ColumnMetadata.named("CREATE_DATE").withIndex(6).ofType(Types.TIMESTAMP).withSize(23).withDigits(10).notNull());
-        addMetadata(messageId, ColumnMetadata.named("MESSAGE_ID").withIndex(2).ofType(Types.BIGINT).withSize(19).notNull());
-        addMetadata(messageType, ColumnMetadata.named("MESSAGE_TYPE").withIndex(3).ofType(Types.VARCHAR).withSize(2147483647).notNull());
-        addMetadata(postDate, ColumnMetadata.named("POST_DATE").withIndex(5).ofType(Types.TIMESTAMP).withSize(23).withDigits(10).notNull());
-        addMetadata(updateDate, ColumnMetadata.named("UPDATE_DATE").withIndex(7).ofType(Types.TIMESTAMP).withSize(23).withDigits(10).notNull());
-        addMetadata(userId, ColumnMetadata.named("USER_ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
+        addMetadata(content, ColumnMetadata.named("CONTENT").withIndex(2).ofType(Types.VARCHAR).withSize(2147483647).notNull());
+        addMetadata(createDate, ColumnMetadata.named("CREATE_DATE").withIndex(4).ofType(Types.TIMESTAMP).withSize(23).withDigits(10).notNull());
+        addMetadata(messageId, ColumnMetadata.named("MESSAGE_ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
+        addMetadata(postDate, ColumnMetadata.named("POST_DATE").withIndex(3).ofType(Types.TIMESTAMP).withSize(23).withDigits(10).notNull());
+        addMetadata(updateDate, ColumnMetadata.named("UPDATE_DATE").withIndex(5).ofType(Types.TIMESTAMP).withSize(23).withDigits(10).notNull());
     }
 
 }
