@@ -21,9 +21,9 @@ import com.slgerkamp.daily.life.core.domain.entry.EntryId;
 import com.slgerkamp.daily.life.generic.application.PathHelper;
 import com.slgerkamp.daily.life.generic.domain.file.IllegalFileException;
 import com.slgerkamp.daily.life.generic.domain.file.ImageRegistrationService;
+import com.slgerkamp.daily.life.infra.db.query.JsonProjection;
 import com.slgerkamp.daily.life.infra.fileio.FileId;
 import com.slgerkamp.daily.life.infra.fileio.temp.TempFileId;
-import com.slgerkamp.daily.life.infra.message.db.query.JsonProjection;
 
 
 /**

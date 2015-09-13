@@ -6,9 +6,9 @@ import java.time.Instant;
 
 import com.google.common.base.Throwables;
 import com.slgerkamp.daily.life.db.query.QFile;
+import com.slgerkamp.daily.life.infra.db.DbService;
 import com.slgerkamp.daily.life.infra.fileio.storage.FileStorage;
 import com.slgerkamp.daily.life.infra.fileio.storage.FileStorage.StorageException;
-import com.slgerkamp.daily.life.infra.message.db.DbService;
 import com.slgerkamp.daily.life.infra.utils.CommonUtils;
 
 /**

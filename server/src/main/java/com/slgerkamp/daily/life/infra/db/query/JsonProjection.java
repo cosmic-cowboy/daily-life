@@ -1,4 +1,4 @@
-package com.slgerkamp.daily.life.infra.message.db.query;
+package com.slgerkamp.daily.life.infra.db.query;
 
 import java.util.Collections;
 import java.util.HashMap;

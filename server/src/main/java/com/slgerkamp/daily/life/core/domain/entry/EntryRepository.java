@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import com.querydsl.sql.dml.SQLDeleteClause;
 import com.querydsl.sql.dml.SQLInsertClause;
 import com.slgerkamp.daily.life.db.query.QEntry;
-import com.slgerkamp.daily.life.infra.message.db.DbService;
+import com.slgerkamp.daily.life.infra.db.DbService;
 import com.slgerkamp.daily.life.infra.utils.CommonUtils;
 
 /**
