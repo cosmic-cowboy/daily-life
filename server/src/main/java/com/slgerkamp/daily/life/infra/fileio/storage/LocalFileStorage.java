@@ -14,10 +14,10 @@ import com.slgerkamp.daily.life.infra.fileio.util.FileioUtility;
  * <p>ファイルシステム上、一般にアプリケーションと同一サーバー内にファイルを格納するためのクラスです。
  *
  */
-public class LocalFileStorage implements FileStorage{
+public class LocalFileStorage implements FileStorage {
 
 	private final File baseDir;
-	
+
 	public LocalFileStorage(File baseDir) {
 		this.baseDir = baseDir;
 	}
@@ -25,20 +25,20 @@ public class LocalFileStorage implements FileStorage{
 	@Override
 	public void write(InputStream input, String path) throws StorageException {
 		Path file = getFile(path);
-		
+
 		try {
 			// ファイルパスが存在しないときはファイルパスまでのディレクトリを作成する
 			try {
 				file.toFile().getParentFile().mkdirs();
 				// ファイルが存在する場合は削除する
-				if(file.toFile().exists()){
+				if (file.toFile().exists()) {
 					Files.delete(file);
 				}
 				Files.copy(input, file);
 			} finally {
 				input.close();
 			}
-			
+
 		} catch (IOException e) {
 			throw new StorageException("登録に失敗しました。", file.toAbsolutePath().toString(), e);
 		}
@@ -56,7 +56,7 @@ public class LocalFileStorage implements FileStorage{
 			Files.walkFileTree(file, FileioUtility.recursiveDeleteFile());
 		} catch (IOException e) {
 			throw new StorageException("削除に失敗しました。", file.toAbsolutePath().toString(), e);
-		}	
+		}
 	}
 
 	// ----------------------------------------------------------------

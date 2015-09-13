@@ -2,12 +2,8 @@ package com.slgerkamp.daily.life.infra.fileio.temp;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.FileVisitResult;
-import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Instant;
 
 import com.google.common.base.Throwables;
@@ -19,15 +15,15 @@ import com.slgerkamp.daily.life.infra.fileio.util.FileioUtility;
  * 処理後に削除されるようにしています。
  *
  */
-public class TempDirectorySession implements AutoCloseable {
+public final class TempDirectorySession implements AutoCloseable {
 
 	// 一時ファイルを扱うための一時ディレクトリ
 	private final Path directory;
-	
+
 	private TempDirectorySession(Path directory) {
 		this.directory = directory;
 	}
-	
+
 	/**
 	 * <p>一時的にファイルを保存するためのディレクトリです。
 	 * @return
@@ -40,13 +36,13 @@ public class TempDirectorySession implements AutoCloseable {
 			throw Throwables.propagate(e);
 		}
 	}
-	
+
 	/**
 	 * 一時ディレクトリにファイルをコピーします。
 	 * @param input
 	 * @return
 	 */
-	public Path copy(InputStream input){
+	public Path copy(InputStream input) {
 		try {
 			Path path = createTempPath();
 			Files.copy(input, path);
@@ -63,7 +59,7 @@ public class TempDirectorySession implements AutoCloseable {
 			Files.walkFileTree(directory, FileioUtility.recursiveDeleteFile());
 		} catch (IOException e) {
 			throw Throwables.propagate(e);
-		}	
+		}
 	}
 
 	// ----------------------------------------------------------------
@@ -73,10 +69,8 @@ public class TempDirectorySession implements AutoCloseable {
 	 * 一時ディレクトリ内に一時パスを作成します。
 	 * @return
 	 */
-	private Path createTempPath(){
+	private Path createTempPath() {
 		return directory.resolve(Integer.toString(Instant.now().getNano()));
 	}
-	
-	
 
 }

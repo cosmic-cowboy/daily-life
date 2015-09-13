@@ -13,6 +13,10 @@ import com.slgerkamp.daily.life.infra.fileio.storage.FileStorage;
 import com.slgerkamp.daily.life.infra.fileio.storage.FileStorage.StorageException;
 import com.slgerkamp.daily.life.infra.utils.CommonUtils;
 
+/**
+ * <p>ファイルを一時的に管理するためのクラスです。
+ *
+ */
 public class TempFileStorage {
 
 	private final FileStorage storage;
@@ -21,7 +25,7 @@ public class TempFileStorage {
 	public TempFileStorage(FileStorage storage) {
 		this.storage = storage;
 	}
-	
+
 	/**
 	 * <p>一時ファイルを追加します。
 	 */
@@ -32,7 +36,7 @@ public class TempFileStorage {
 			throw Throwables.propagate(e);
 		}
 	}
-	
+
 	/**
 	 * <p>一時ファイルを追加します。
 	 */
@@ -56,7 +60,7 @@ public class TempFileStorage {
 			throw Throwables.propagate(e);
 		}
 	}
-	
+
 	/**
 	 * <p>一時ファイルを削除します。
 	 */

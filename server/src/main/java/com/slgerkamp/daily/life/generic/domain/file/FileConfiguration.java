@@ -11,6 +11,10 @@ import com.slgerkamp.daily.life.infra.fileio.storage.FileStorage;
 import com.slgerkamp.daily.life.infra.fileio.storage.LocalFileStorage;
 import com.slgerkamp.daily.life.infra.fileio.temp.TempFileStorage;
 
+/**
+ * <p>ファイルに関連する定義を初期設定するクラスです。
+ *
+ */
 @Configuration
 public class FileConfiguration {
 

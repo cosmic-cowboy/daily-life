@@ -7,16 +7,16 @@ package com.slgerkamp.daily.life.infra.modeling;
 public abstract class LongValueId {
 
 	private final long value;
-	
+
 	/**
-	 * <p>コンストラクタ
+	 * <p>コンストラクタです。
 	 * @param value
 	 */
 	protected LongValueId(long value) {
 		this.value = value;
 	}
-	
-	public final long longValue(){
+
+	public final long longValue() {
 		return value;
 	}
 

@@ -9,13 +9,13 @@ import java.time.Instant;
 public final class CommonUtils {
 
 	private CommonUtils() { };
-	
+
 	/**
-	 * <p>ユニークIDを生成します。	
+	 * <p>ユニークIDを生成します。
 	 * @return
 	 */
-	public static long getUniqueId(){
+	public static long getUniqueId() {
 		// TODO 本番提供前に重複を考慮する
-		return Instant.now().getNano(); 
+		return Instant.now().getNano();
 	}
 }

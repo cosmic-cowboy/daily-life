@@ -13,17 +13,17 @@ public enum ImageFormat {
 	GIF("image/gif");
 
 	public final String mimeType;
-	
+
 	private ImageFormat(String mimeType) {
 		this.mimeType = mimeType;
 	}
-	
+
 	/**
 	 * <p>ファイルのmineTypeを元に画像フォーマットを返します。
 	 * @param mimeType
 	 * @return
 	 */
-	public static Optional<ImageFormat> fromMime(final String mimeType){
+	public static Optional<ImageFormat> fromMime(final String mimeType) {
 		return EnumSet.allOf(ImageFormat.class)
 				.stream()
 				.filter(format -> format.mimeType.equals(mimeType))

@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 
 import com.google.common.base.Throwables;
 import com.slgerkamp.daily.life.infra.fileio.image.ImageFormat;
-import com.slgerkamp.daily.life.infra.fileio.storage.FileStorage;
 import com.slgerkamp.daily.life.infra.fileio.temp.TempDirectorySession;
 import com.slgerkamp.daily.life.infra.fileio.temp.TempFileId;
 import com.slgerkamp.daily.life.infra.fileio.temp.TempFileStorage;
@@ -30,7 +29,7 @@ import com.slgerkamp.daily.life.infra.fileio.temp.TempFileStorage;
 public class ImageRegistrationService {
 
 	private TempFileStorage tempFileStorage;
-	
+
 	@Autowired
 	public ImageRegistrationService(TempFileStorage tempFileStorage) {
 		this.tempFileStorage = tempFileStorage;
@@ -41,8 +40,8 @@ public class ImageRegistrationService {
 	 * @param size
 	 * @throws IllegalFileException
 	 */
-	public TempFileId submit(InputStream input) throws IllegalFileException{
-		try (TempDirectorySession session = TempDirectorySession.start()){
+	public TempFileId submit(InputStream input) throws IllegalFileException {
+		try (TempDirectorySession session = TempDirectorySession.start()) {
 			// ファイルを一時ディレクトリにコピーする
 			Path source = session.copy(input);
 			// ファイルの画像フォーマットを取得する + 判定する
@@ -55,20 +54,19 @@ public class ImageRegistrationService {
 			TempFileId tempFileId = tempFileStorage.register(source.toFile());
 			return tempFileId;
 		}
-		
-	}
-	/**
-	 * <p>画像ファイルを登録します。
-	 * @param input
-	 */
-	public File	commit(TempFileId tempFileId)){
-		
-		// DBへの登録
-		// ストレージへの登録
-		
-	}
 
-	
+	}
+//	/**
+//	 * <p>画像ファイルを登録します。
+//	 * @param input
+//	 */
+//	public File	commit(TempFileId tempFileId){
+//
+//		// DBへの登録
+//		// ストレージへの登録
+//
+//	}
+
 	// ----------------------------------------------------------------
 	//    内部処理
 	// ----------------------------------------------------------------
@@ -77,14 +75,14 @@ public class ImageRegistrationService {
 	 * @param file
 	 * @return
 	 */
-	private Optional<ImageFormat> format(File file){
+	private Optional<ImageFormat> format(File file) {
 		try (InputStream input = new BufferedInputStream(new FileInputStream(file))) {
 			TikaConfig tika = new TikaConfig();
 			Metadata metadata = new Metadata();
 			MediaType type = tika.getDetector().detect(input, metadata);
-		
+
 			return ImageFormat.fromMime(type.toString());
-		
+
 		} catch (TikaException | IOException e) {
 			throw Throwables.propagate(e);
 		}

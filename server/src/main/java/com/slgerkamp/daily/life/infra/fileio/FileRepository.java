@@ -7,6 +7,10 @@ import com.slgerkamp.daily.life.infra.fileio.storage.FileStorage;
 import com.slgerkamp.daily.life.infra.fileio.storage.FileStorage.StorageException;
 import com.slgerkamp.daily.life.infra.utils.CommonUtils;
 
+/**
+ * <p>ファイルの管理を司るクラスです。
+ *
+ */
 public class FileRepository {
 
 	private final FileStorage storage;
@@ -15,7 +19,7 @@ public class FileRepository {
 		this.storage = storage;
 	}
 
-	public FileId register(InputStream in){
+	public FileId register(InputStream in) {
 
 		try {
 			FileId fileId = new FileId(CommonUtils.getUniqueId());
