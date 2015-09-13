@@ -1,4 +1,4 @@
-package com.slgerkamp.daily.life.core.domain.entity;
+package com.slgerkamp.daily.life.core.domain.entry;
 
 import com.slgerkamp.daily.life.infra.modeling.LongValueId;
 
@@ -6,9 +6,9 @@ import com.slgerkamp.daily.life.infra.modeling.LongValueId;
  * <p>日記エントリのIDを表すクラスです。
  *
  */
-public class MessageId extends LongValueId {
+public class EntryId extends LongValueId {
 
-	public MessageId(long value) {
+	public EntryId(long value) {
 		super(value);
 	}
 

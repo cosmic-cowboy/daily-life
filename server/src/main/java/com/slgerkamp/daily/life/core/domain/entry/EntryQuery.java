@@ -1,4 +1,4 @@
-package com.slgerkamp.daily.life.core.domain.entity;
+package com.slgerkamp.daily.life.core.domain.entry;
 
 import java.sql.Timestamp;
 
@@ -7,10 +7,10 @@ import org.springframework.stereotype.Component;
 
 import com.querydsl.core.types.Expression;
 import com.slgerkamp.daily.life.db.query.QEntry;
-import com.slgerkamp.daily.life.infra.message.db.DbService;
-import com.slgerkamp.daily.life.infra.message.db.query.DailyLifeQuery;
-import com.slgerkamp.daily.life.infra.message.db.query.ExpressionUtils;
-import com.slgerkamp.daily.life.infra.message.db.query.Selection;
+import com.slgerkamp.daily.life.infra.db.DbService;
+import com.slgerkamp.daily.life.infra.db.query.DailyLifeQuery;
+import com.slgerkamp.daily.life.infra.db.query.ExpressionUtils;
+import com.slgerkamp.daily.life.infra.db.query.Selection;
 
 
 /**

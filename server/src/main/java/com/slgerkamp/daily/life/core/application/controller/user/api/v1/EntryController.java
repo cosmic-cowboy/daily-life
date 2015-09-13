@@ -15,15 +15,15 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.collect.ImmutableMap;
-import com.slgerkamp.daily.life.core.domain.entity.EntryQuery;
-import com.slgerkamp.daily.life.core.domain.entity.EntryRepository;
-import com.slgerkamp.daily.life.core.domain.entity.MessageId;
+import com.slgerkamp.daily.life.core.domain.entry.EntryQuery;
+import com.slgerkamp.daily.life.core.domain.entry.EntryRepository;
+import com.slgerkamp.daily.life.core.domain.entry.EntryId;
 import com.slgerkamp.daily.life.generic.application.PathHelper;
 import com.slgerkamp.daily.life.generic.domain.file.IllegalFileException;
 import com.slgerkamp.daily.life.generic.domain.file.ImageRegistrationService;
+import com.slgerkamp.daily.life.infra.db.query.JsonProjection;
 import com.slgerkamp.daily.life.infra.fileio.FileId;
 import com.slgerkamp.daily.life.infra.fileio.temp.TempFileId;
-import com.slgerkamp.daily.life.infra.message.db.query.JsonProjection;
 
 
 /**
@@ -70,21 +70,21 @@ public class EntryController {
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	public Map<String, Object> post(@RequestBody String content) {
-		MessageId messageId = entryRepositoryFactory.create().create(content);
+		EntryId entryId = entryRepositoryFactory.create().create(content);
 		return new ImmutableMap.Builder<String, Object>()
-				.put("messageId", messageId.longValue())
+				.put("entryId", entryId.longValue())
 				.build();
 	}
 
 	/**
 	 * <p>日記を削除する。
-	 * @param messageId
+	 * @param entryId
 	 */
 	@RequestMapping(method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void delete(@RequestParam Long messageId) {
+	public void delete(@RequestParam Long entryId) {
 
-		entryRepositoryFactory.create().delete(new MessageId(messageId));
+		entryRepositoryFactory.create().delete(new EntryId(entryId));
 	}
 
 	/**

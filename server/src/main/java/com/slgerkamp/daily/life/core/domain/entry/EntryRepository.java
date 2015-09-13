@@ -1,4 +1,4 @@
-package com.slgerkamp.daily.life.core.domain.entity;
+package com.slgerkamp.daily.life.core.domain.entry;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import com.querydsl.sql.dml.SQLDeleteClause;
 import com.querydsl.sql.dml.SQLInsertClause;
 import com.slgerkamp.daily.life.db.query.QEntry;
-import com.slgerkamp.daily.life.infra.message.db.DbService;
+import com.slgerkamp.daily.life.infra.db.DbService;
 import com.slgerkamp.daily.life.infra.utils.CommonUtils;
 
 /**
@@ -44,15 +44,15 @@ public final class EntryRepository {
 	/**
 	 * <p>日記エントリを作成します。
 	 */
-	public MessageId create(final String content) {
+	public EntryId create(final String content) {
 
 		// 登録情報の整理
 		final Timestamp now = Timestamp.from(Instant.now());
-		final MessageId messageId = new MessageId(CommonUtils.getUniqueId());
+		final EntryId entryId = new EntryId(CommonUtils.getUniqueId());
 		// 登録
 		QEntry e = QEntry.entry;
 		SQLInsertClause insert = dbService.insert(e)
-				.set(e.messageId, messageId.longValue())
+				.set(e.entryId, entryId.longValue())
 				.set(e.content, content)
 				.set(e.createDate, now)
 				.set(e.updateDate, now)
@@ -60,18 +60,18 @@ public final class EntryRepository {
 
 		insert.execute();
 
-		return messageId;
+		return entryId;
 
 	}
 
 	/**
 	 * <p>日記エントリを削除します。
 	 */
-	public void delete(final MessageId messageId) {
+	public void delete(final EntryId entryId) {
 
 		QEntry e = QEntry.entry;
 		SQLDeleteClause delete = dbService.delete(e)
-				.where(e.messageId.eq(messageId.longValue()));
+				.where(e.entryId.eq(entryId.longValue()));
 		delete.execute();
 
 	}

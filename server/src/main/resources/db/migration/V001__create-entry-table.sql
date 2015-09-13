@@ -1,5 +1,5 @@
 CREATE TABLE entry (
-  message_id    BIGINT NOT NULL PRIMARY KEY,
+  entry_id    BIGINT NOT NULL PRIMARY KEY,
   content       VARCHAR NOT NULL,
   post_date     TIMESTAMP NOT NULL,
   create_date   TIMESTAMP NOT NULL,

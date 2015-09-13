@@ -1,4 +1,4 @@
-INSERT INTO entry ( message_id, content, post_date, create_date, update_date )
+INSERT INTO entry ( entry_id, content, post_date, create_date, update_date )
   VALUES 
 (1111,'郵便受箱に、生きている蛇へびを投げ入れていった人がある。憤怒。日に二十度、わが家の郵便受箱を覗のぞき込む売れない作家を、嘲あざけっている人の為なせる仕業にちがいない。気色あしくなり、終日、臥床。',now(),now(),now()),
 (1112,'苦悩を売物にするな、と知人よりの書簡あり。',now(),now(),now()),

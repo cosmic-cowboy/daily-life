@@ -1,4 +1,4 @@
-package com.slgerkamp.daily.life.infra.message.db;
+package com.slgerkamp.daily.life.infra.db;
 
 import java.sql.Connection;
 
@@ -14,7 +14,7 @@ import com.querydsl.sql.SQLTemplates;
 import com.querydsl.sql.dml.SQLDeleteClause;
 import com.querydsl.sql.dml.SQLInsertClause;
 import com.querydsl.sql.dml.SQLUpdateClause;
-import com.slgerkamp.daily.life.infra.message.db.query.DailyLifeQuery;
+import com.slgerkamp.daily.life.infra.db.query.DailyLifeQuery;
 
 /**
  * <p>DBを使用する際に利用します。
