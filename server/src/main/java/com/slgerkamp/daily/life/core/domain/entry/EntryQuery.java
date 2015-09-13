@@ -54,6 +54,9 @@ public final class EntryQuery {
 	// ----------------------------------------------------------------
 	//     各種パス
 	// ----------------------------------------------------------------
+	public Expression<EntryId> entryId() {
+		return ExpressionUtils.select(entry.entryId).then(EntryId::new);
+	}
 	public Expression<String> content() {
 		return entry.content;
 	}

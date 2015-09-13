@@ -1,9 +1,12 @@
 package com.slgerkamp.daily.life.infra.modeling;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 /**
  * <p>long型でIDで表すときに利用する基幹クラスです。
  *
  */
+@JsonSerialize(using = LongValueIdToJson.class)
 public abstract class LongValueId {
 
 	private final long value;
@@ -38,5 +41,10 @@ public abstract class LongValueId {
 		LongValueId other = (LongValueId) obj;
 		if (value != other.value) return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return Long.toString(value);
 	}
 }

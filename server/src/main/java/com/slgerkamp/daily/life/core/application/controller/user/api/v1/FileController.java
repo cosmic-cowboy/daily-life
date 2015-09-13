@@ -1,7 +1,6 @@
 package com.slgerkamp.daily.life.core.application.controller.user.api.v1;
 
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

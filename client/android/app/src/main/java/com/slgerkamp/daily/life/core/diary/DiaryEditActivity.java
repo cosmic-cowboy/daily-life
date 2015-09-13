@@ -78,8 +78,6 @@ public class DiaryEditActivity extends AppCompatActivity {
     private void postEntry(String content) {
 
         new Backend(this).post("entry")
-                .param("userId", "1")
-                .param("messageType","日記")
                 .param("content", content)
                 .toObservable()
                 .map(new Func1<JSONData, DiaryItem>() {
