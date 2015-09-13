@@ -34,6 +34,7 @@ public class LocalFileStorage implements FileStorage{
 				if(file.toFile().exists()){
 					Files.delete(file);
 				}
+				Files.copy(input, file);
 			} finally {
 				input.close();
 			}
