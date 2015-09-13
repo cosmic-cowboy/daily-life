@@ -33,6 +33,21 @@
 
 `curl -v localhost:9000/user/api/v1/entry/image -X POST -H "Content-Type: application/json" -d @画像のパス`
 
+#### 画像データの取得
+
+| HTTPメソッド | URI | 
+|:-----------|:------------:|
+| POST       | (ホスト名)/user/api/v1/entry/file/image|
+
+リクエストパラメータ
+
+| パラメータ名 | 指定する値 | 必須 | 説明 |
+|:-----------|:--------:|:---:|:----:|
+| fileId     |ファイルID|必須|ファイルのIDを指定します|
+
+例）
+
+`curl -v localhost:9000/user/api/v1/file/image?fileId=ファイルID -X GET -H "Content-Type: application/json"`
 
 ### リンク
 

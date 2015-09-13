@@ -33,6 +33,11 @@ public class FileConfiguration {
 	}
 
 	@Bean
+	FileStorage getFileStorage() {
+		return createStorage(storagePath);
+	}
+
+	@Bean
 	TempFileStorage getTempFileStorage() {
 		return new TempFileStorage(createStorage(tmpStoragePath));
 	}
