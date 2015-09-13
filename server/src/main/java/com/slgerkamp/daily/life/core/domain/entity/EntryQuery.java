@@ -15,6 +15,9 @@ import com.slgerkamp.daily.life.infra.message.db.query.Selection;
 
 /**
  * <p>日記のエントリ情報を取得するためのクエリクラスです。
+ * <p>これは日記エントリの参照用オブジェクトとなります。
+ * <p>詳細は下記を参照ください。
+ * <p>http://d.hatena.ne.jp/j5ik2o/20110211/1297442876
  *
  */
 public final class EntryQuery {
