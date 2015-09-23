@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.util.Log;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.io.ByteStreams;
 import com.slgerkamp.daily.life.infra.JSONData;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.HttpUrl;
@@ -16,7 +17,10 @@ import com.squareup.okhttp.Response;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
 
+import okio.BufferedSink;
 import rx.Observable;
 import rx.android.app.AppObservable;
 import rx.functions.Func1;
@@ -97,6 +101,31 @@ public class Backend {
         }
     }
 
+    /**
+     * ファイルをアップロードする。
+     * URLパスとinputStreamを設定するとリクエストを実施し、結果をObservableで返却する
+     */
+    public Observable<JSONData> upload(String path, final InputStream input) {
+        RequestBody body = new RequestBody() {
+            @Override
+            public MediaType contentType() {
+                return MediaType.parse("application/octet-stream");
+            }
+
+            @Override
+            public void writeTo(BufferedSink sink) throws IOException {
+                ByteStreams.copy(input, sink.outputStream());
+            }
+        };
+
+        HttpUrl.Builder builder = builder();
+        for (String s : path.split("/")) {
+            builder.addPathSegment(s);
+        }
+        Request post = new Request.Builder().url(builder.toString()).post(body).build();
+
+        return Observable.just(post).flatMap(new RequestExecutor());
+    }
 
 
     // ----------------------------------------------------------------

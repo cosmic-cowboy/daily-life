@@ -2,6 +2,7 @@ package com.slgerkamp.daily.life.core.diary;
 
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,9 +17,10 @@ import com.slgerkamp.daily.life.generic.Backend;
 import com.slgerkamp.daily.life.generic.ImageSelectionWizard;
 import com.slgerkamp.daily.life.infra.JSONData;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.Date;
 
-import butterknife.InjectView;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
@@ -59,6 +61,12 @@ public class DiaryEditActivity extends AppCompatActivity {
             //
             case R.id.open_image_dialog:
                 ImageSelectionWizard wizard = ImageSelectionWizard.create(100);
+                wizard.result.subscribe(new Action1<Bitmap>() {
+                    @Override
+                    public void call(Bitmap bitmap) {
+                        updateImage(bitmap);
+                    }
+                });
                 wizard.show(getFragmentManager(), MainActivity.class.getSimpleName());
 
                 return true;
@@ -91,4 +99,31 @@ public class DiaryEditActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    private void updateImage(Bitmap bitmap) {
+        //
+        // 1. アップロードする画像のバイナリを作成
+        //
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, buffer);
+
+        //
+        // 2. アップロード
+        //
+        new Backend(this).upload("user/detail/image", new ByteArrayInputStream(buffer.toByteArray())).subscribe(
+                new Action1<JSONData>() {
+                    @Override
+                    public void call(JSONData jsonData) {
+//                        setupDrawer();
+                    }
+                },
+                new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+//                        myIcon.setImageDrawable(prevImage);
+                    }
+                }
+        );
+    }
+
 }
