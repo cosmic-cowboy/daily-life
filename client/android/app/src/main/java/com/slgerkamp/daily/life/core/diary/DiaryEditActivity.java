@@ -110,7 +110,7 @@ public class DiaryEditActivity extends AppCompatActivity {
         //
         // 2. アップロード
         //
-        new Backend(this).upload("user/detail/image", new ByteArrayInputStream(buffer.toByteArray())).subscribe(
+        new Backend(this).upload("entry/image", new ByteArrayInputStream(buffer.toByteArray())).subscribe(
                 new Action1<JSONData>() {
                     @Override
                     public void call(JSONData jsonData) {
