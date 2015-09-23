@@ -30,7 +30,9 @@ public class Backend {
     private static final OkHttpClient client = new OkHttpClient();
 
     // TODO ここらへんは固定値ならvalueに移行する
-    private static final String domain = "192.168.58.1";
+
+//    private static final String domain = "192.168.1.26";
+    private static final String domain = "172.20.10.4";
     private static final boolean secure = false;
     private static final int port = 9000;
     private static final String pathPrefix = "/user/api/v1";
@@ -51,15 +53,18 @@ public class Backend {
     public class Get {
         private final HttpUrl.Builder builder = builder();
 
+        // コンストラクタ呼び出し時にPathを設定する
         public Get(String[] path) {
             for (String p : path) builder.addPathSegment(p);
         }
 
+        // queryパラメータを設定する
         public Get param(String key, String value) {
             builder.addQueryParameter(key, value);
             return this;
         }
 
+        // リクエストを実施し、結果をObservableで返却する
         public Observable<JSONData> toObservable() {
             Request req = new Request.Builder().url(builder.build().toString()).build();
             return Observable.just(req).flatMap(new RequestExecutor());
@@ -74,17 +79,20 @@ public class Backend {
         private final Request.Builder builder;
         private final ImmutableMap.Builder<String, Object> params = new ImmutableMap.Builder<>();
 
+        // コンストラクタ呼び出し時にPathを設定する
         public Post(String[] path) {
             HttpUrl.Builder builder = builder();
             for (String p : path) builder.addPathSegment(p);
             this.builder = new Request.Builder().url(builder.build());
         }
 
+        // RequestBody に 含む要素をkey, valueで設定する
         public Post param(String key, String value) {
             params.put(key, value);
             return this;
         }
 
+        // リクエストを実施し、結果をObservableで返却する
         public Observable<JSONData> toObservable() {
             RequestBody body = RequestBody.create(
                     MediaType.parse("application/json"),
@@ -105,6 +113,7 @@ public class Backend {
 
     /**
      * リクエストを発行するための関数です。
+     * Observableなリクエストを受け取って、
      */
     private class RequestExecutor implements Func1<Request, Observable<JSONData>> {
         @Override
@@ -141,6 +150,9 @@ public class Backend {
             }));
         }
 
+        /**
+         * レスポンスからJSONDataを生成する
+         */
         private Observable<JSONData> processResponse(Response res) throws IOException {
             if (!res.isSuccessful()) {
                 return new ServiceException("Unexpected Status: " + res.code() + " " + res.body().string()).error();
@@ -153,6 +165,11 @@ public class Backend {
         }
     }
 
+
+    /**
+     * アクセス先の基本情報を設定する
+     * スキーム、ドメイン、ポート、共通のURLパス
+     */
     private static HttpUrl.Builder builder() {
         return new HttpUrl.Builder()
                 .scheme(secure ? "https" : "http")
