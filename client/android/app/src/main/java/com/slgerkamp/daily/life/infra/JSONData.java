@@ -12,6 +12,9 @@ import java.util.Map;
 
 import rx.Observable;
 
+/**
+ * JSON形式の文字列をObjectに変換するクラスです。
+ */
 public class JSONData {
 
     private final JSONObject object;

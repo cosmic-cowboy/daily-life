@@ -9,6 +9,11 @@
     android:layout_below="@id/toolbar"
     tools:context="com.slgerkamp.daily.life.core.diary.DiaryFragment">
 
+    <ListView android:id="@android:id/list" android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <TextView android:id="@android:id/empty" android:layout_width="match_parent"
+        android:layout_height="match_parent" android:gravity="center" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/first_fab"
@@ -23,11 +28,5 @@
         app:borderWidth="0dp"
         app:elevation="6dp"
         />
-
-    <ListView android:id="@android:id/list" android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <TextView android:id="@android:id/empty" android:layout_width="match_parent"
-        android:layout_height="match_parent" android:gravity="center" />
 
 </FrameLayout>
