@@ -37,7 +37,7 @@
 
 | HTTPメソッド | URI | 
 |:-----------|:------------:|
-| POST       | (ホスト名)/user/api/v1/entry/file/image|
+| GET       | (ホスト名)/user/api/v1/entry/file/image|
 
 リクエストパラメータ
 
