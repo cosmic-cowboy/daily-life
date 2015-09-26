@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.slgerkamp.daily.life.MainActivity;
 import com.slgerkamp.daily.life.R;
@@ -21,19 +22,22 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Date;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
 public class DiaryEditActivity extends AppCompatActivity {
 
-    EditText editText;
+    @InjectView(R.id.message_image) ImageView imageView;
+    @InjectView(R.id.message_input) EditText editText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_diary_edit);
+        ButterKnife.inject(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        editText = (EditText) findViewById(R.id.message_input);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(Long.toString(new Date().getTime()));
@@ -114,16 +118,23 @@ public class DiaryEditActivity extends AppCompatActivity {
                 new Action1<JSONData>() {
                     @Override
                     public void call(JSONData jsonData) {
-//                        setupDrawer();
-                    }
-                },
-                new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-//                        myIcon.setImageDrawable(prevImage);
+                        setUpImage(jsonData);
                     }
                 }
         );
     }
+
+    private void setUpImage(JSONData json){
+        json.getLong("fileId").subscribe(
+                new Action1<Long>() {
+                    @Override
+                    public void call(Long id) {
+                        new Backend(DiaryEditActivity.this).imageLoader()
+                                .load(id).into(imageView);
+                    }
+                }
+        );
+    }
+
 
 }

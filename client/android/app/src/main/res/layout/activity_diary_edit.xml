@@ -6,9 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:screenOrientation="portrait"
+    android:background="@color/edit_background"
     tools:context="com.slgerkamp.daily.life.core.diary.DiaryEditActivity"
     app:columnCount="1"
-    app:rowCount="2">
+    app:rowCount="3">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -22,13 +23,20 @@
         app:popupTheme="@style/AppTheme"
         android:elevation="4dp" />
 
+    <ImageView
+        android:id="@+id/message_image"
+        app:layout_row="1"
+        app:layout_column="0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+
     <EditText
         android:id="@+id/message_input"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_row="1"
+        android:layout_height="wrap_content"
+        app:layout_row="2"
         app:layout_column="0"
-        android:background="@color/edit_background"
         android:gravity="start"
         android:inputType="textMultiLine"
         android:scrollbars="vertical"

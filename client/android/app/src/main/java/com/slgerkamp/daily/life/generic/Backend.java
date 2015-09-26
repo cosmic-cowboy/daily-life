@@ -1,6 +1,7 @@
 package com.slgerkamp.daily.life.generic;
 
 import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 
 import com.google.common.collect.ImmutableMap;
@@ -13,12 +14,14 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
+import com.squareup.picasso.OkHttpDownloader;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
 
 import okio.BufferedSink;
 import rx.Observable;
@@ -32,7 +35,6 @@ import rx.subjects.AsyncSubject;
 public class Backend {
 
     private static final OkHttpClient client = new OkHttpClient();
-
     // TODO ここらへんは固定値ならvalueに移行する
 
 //    private static final String domain = "192.168.1.26";
@@ -42,9 +44,11 @@ public class Backend {
     private static final String pathPrefix = "/user/api/v1";
 
     private final Activity activity;
+    private final Picasso picasso;
 
     public Backend(Activity activity) {
         this.activity = activity;
+        this.picasso = new Picasso.Builder(activity).downloader(new OkHttpDownloader(client)).build();
     }
 
     // ----------------------------------------------------------------
@@ -135,6 +139,9 @@ public class Backend {
         return Observable.just(post).flatMap(new RequestExecutor());
     }
 
+    public ImageLoader imageLoader() {
+        return new ImageLoader(activity);
+    }
 
     // ----------------------------------------------------------------
     //     リクエスト共通処理
@@ -194,6 +201,26 @@ public class Backend {
         }
     }
 
+
+    /**
+     * 画像をロードするためのリクエストを構築する。
+     */
+    public class ImageLoader {
+        private final Context context;
+
+        public ImageLoader(Context context) {
+            this.context = context;
+        }
+
+        public RequestCreator load(Long id) {
+            HttpUrl url = builder().addPathSegment("file").addPathSegment("image")
+                    .addQueryParameter("fileId", Long.toString(id))
+                    .build();
+
+            Log.d(Backend.class.getSimpleName(), "image: " + url);
+            return picasso.load(url.toString());
+        }
+    }
 
     /**
      * アクセス先の基本情報を設定する
