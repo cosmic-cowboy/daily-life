@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.google.common.base.Optional;
 import com.slgerkamp.daily.life.MainActivity;
 import com.slgerkamp.daily.life.R;
 import com.slgerkamp.daily.life.generic.Backend;
@@ -31,6 +32,7 @@ public class DiaryEditActivity extends AppCompatActivity {
 
     @InjectView(R.id.message_image) ImageView imageView;
     @InjectView(R.id.message_input) EditText editText;
+    Optional<Long> optFileId = Optional.absent();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,9 +89,12 @@ public class DiaryEditActivity extends AppCompatActivity {
 
     private void postEntry(String content) {
 
-        new Backend(this).post("entry")
-                .param("content", content)
-                .toObservable()
+        Backend.Post post = new Backend(this).post("entry")
+                .param("content", content);
+        if (optFileId.isPresent()){
+            post.param("fileId", Long.toString(optFileId.get()));
+        }
+        post.toObservable()
                 .map(new Func1<JSONData, DiaryItem>() {
                     @Override
                     public DiaryItem call(JSONData json) {
@@ -131,6 +136,7 @@ public class DiaryEditActivity extends AppCompatActivity {
                     public void call(Long id) {
                         new Backend(DiaryEditActivity.this).imageLoader()
                                 .load(id).into(imageView);
+                        optFileId = Optional.of(id);
                     }
                 }
         );

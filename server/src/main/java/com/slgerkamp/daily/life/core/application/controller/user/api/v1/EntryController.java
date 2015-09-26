@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.collect.ImmutableMap;
+import com.slgerkamp.daily.life.core.application.controller.user.api.v1.form.EntryForm;
 import com.slgerkamp.daily.life.core.domain.entry.EntryQuery;
 import com.slgerkamp.daily.life.core.domain.entry.EntryRepository;
 import com.slgerkamp.daily.life.core.domain.entry.EntryId;
@@ -66,12 +67,13 @@ public class EntryController {
 
 	/**
 	 * <p>日記を投稿する。
-	 * @param entry
+	 * @param entryForm
 	 */
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Map<String, Object> post(@RequestBody String content) {
-		EntryId entryId = entryRepositoryFactory.create().create(content);
+	public Map<String, Object> post(@RequestBody EntryForm entryForm) {
+		EntryRepository repository = entryRepositoryFactory.create();
+		EntryId entryId = entryForm.create(repository);
 		return new ImmutableMap.Builder<String, Object>()
 				.put("entryId", entryId.longValue())
 				.build();

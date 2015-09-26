@@ -13,21 +13,42 @@
 
 `curl -v localhost:9000/user/api/v1/entry -X GET -H "Content-Type: application/json"`
 
-#### 日記の文字データの登録
+#### 日記投稿
 
 | HTTPメソッド | URI |
 |:-----------|:------------:|
 | POST       | (ホスト名)/user/api/v1/entry|
 
+リクエストデータ
+
+| パラメータ名 | 指定する値 | 必須 | 説明 |
+|:-----------|:--------:|:---:|:----:|
+| content    |投稿内容|必須|投稿内容を指定します|
+| fileId     |ファイルID|オプション|ファイルのIDを指定します|
+
+レスポンスデータ
+
+| パラメータ名 | 指定する値 | 説明 |
+|:-----------|:--------:|:----:|
+| entryId    |日記エントリID|日記エントリのIDを指定します|
+
 例）
 
-`curl -v localhost:9000/user/api/v1/entry -X POST -H "Content-Type: application/json" -d "{\"content\":\"日記内容\"}"`
+`curl -v localhost:9000/user/api/v1/entry -X POST -H "Content-Type: application/json" -d "{\"content\":\"日記内容\",\"fileId\":\"00000\"}"`
 
-#### 日記の画像データの登録
+#### 画像登録
 
 | HTTPメソッド | URI |
 |:-----------|:------------:|
 | POST       | (ホスト名)/user/api/v1/entry/image|
+
+リクエストデータ：InputStream
+
+レスポンスデータ
+
+| パラメータ名 | 指定する値 | 説明 |
+|:-----------|:--------:|:----:|
+| fileId     |ファイルID|ファイルのIDを指定します|
 
 例）
 

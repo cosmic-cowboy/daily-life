@@ -30,6 +30,8 @@ public class QFile extends com.querydsl.sql.RelationalPathBase<QFile> {
 
     public final com.querydsl.sql.PrimaryKey<QFile> constraint2 = createPrimaryKey(fileId);
 
+    public final com.querydsl.sql.ForeignKey<QEntry> _fkeyEntryFileId = createInvForeignKey(fileId, "FILE_ID");
+
     public QFile(String variable) {
         super(QFile.class, forVariable(variable), "PUBLIC", "FILE");
         addMetadata();
