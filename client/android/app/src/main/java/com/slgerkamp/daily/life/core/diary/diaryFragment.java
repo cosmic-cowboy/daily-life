@@ -1,5 +1,6 @@
 package com.slgerkamp.daily.life.core.diary;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -40,6 +41,8 @@ public class DiaryFragment extends Fragment {
     // TODO リストが他にできたら汎用的なEntityListをつくる
     private Map<Integer, DiaryItem> entityMap;
 
+    private static final int CALL_DIARY_EDIT_ACITIVITY_REQUEST_CODE = 123;
+
     public DiaryFragment() {
         entityMap = new HashMap<>();
     };
@@ -70,12 +73,25 @@ public class DiaryFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
+
                 Intent intent = new Intent(getActivity(), DiaryEditActivity.class);
-                getActivity().startActivity(intent);
+                startActivityForResult(intent, CALL_DIARY_EDIT_ACITIVITY_REQUEST_CODE);
             }
         });
+    }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case CALL_DIARY_EDIT_ACITIVITY_REQUEST_CODE:
+                if (resultCode == Activity.RESULT_OK) {
+                    getEntry();
+                }
+            break;
+        default:
+            break;
+        }
     }
 
     private class DiaryAdapter extends BaseAdapter {
@@ -105,7 +121,7 @@ public class DiaryFragment extends Fragment {
             }
 
             DiaryCell cell = new DiaryCell(v);
-            cell.setItem(entityMap.get(position));
+            cell.setItem(entityMap.get(position), new Backend(getActivity()).imageLoader());
 
             return v;
         }

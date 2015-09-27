@@ -62,6 +62,7 @@ public class DiaryEditActivity extends AppCompatActivity {
         switch(item.getItemId()) {
             // ホームボタン
             case android.R.id.home:
+                setResult(RESULT_CANCELED);
                 finish();
                 return true;
             //
@@ -79,6 +80,7 @@ public class DiaryEditActivity extends AppCompatActivity {
             // 保存ボタン
             case R.id.post_newDiary:
                 postEntry(editText.getText().toString());
+                setResult(RESULT_OK);
                 finish();
                 return true;
         }
