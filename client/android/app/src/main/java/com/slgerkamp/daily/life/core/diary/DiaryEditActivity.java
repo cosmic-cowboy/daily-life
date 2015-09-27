@@ -32,11 +32,12 @@ public class DiaryEditActivity extends AppCompatActivity {
 
     @InjectView(R.id.message_image) ImageView imageView;
     @InjectView(R.id.message_input) EditText editText;
-    Optional<Long> optFileId = Optional.absent();
+    Optional<Long> optFileId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        optFileId = Optional.absent();
         setContentView(R.layout.activity_diary_edit);
         ButterKnife.inject(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
