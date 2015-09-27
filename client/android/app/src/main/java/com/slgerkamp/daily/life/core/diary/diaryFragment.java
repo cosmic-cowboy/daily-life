@@ -30,7 +30,7 @@ import rx.functions.Func1;
 /**
  * <p>日記の一覧画面を管理するクラスです。
  */
-public class DiaryFragment extends Fragment implements AbsListView.OnItemClickListener {
+public class DiaryFragment extends Fragment {
 
     @InjectView(android.R.id.list) AbsListView listView;
     @InjectView(R.id.first_fab) FloatingActionButton fab;
@@ -58,23 +58,23 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
 
         ButterKnife.inject(this, view);
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), DiaryEditActivity.class);
-                getActivity().startActivity(intent);
-            }
-        });
-
         listView.setAdapter(diaryAdapter);
-
-        listView.setOnItemClickListener(this);
 
         return view;
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                
+                Intent intent = new Intent(getActivity(), DiaryEditActivity.class);
+                getActivity().startActivity(intent);
+            }
+        });
 
     }
 
