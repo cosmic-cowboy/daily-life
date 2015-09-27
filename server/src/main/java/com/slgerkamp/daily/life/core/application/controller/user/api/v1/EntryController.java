@@ -1,6 +1,7 @@
 package com.slgerkamp.daily.life.core.application.controller.user.api.v1;
 
 import java.util.List;
+import java.util.Optional;
 import java.io.InputStream;
 import java.util.Map;
 
@@ -47,27 +48,19 @@ public class EntryController {
 	ImageRegistrationService imageRegistrationService;
 
 	/**
-	 * <p>日記を閲覧する。
+	 * <p>すべての日記を取得する。
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.GET)
-	public Map<String, Object> list() {
+	public Map<String, Object> entryList(@RequestParam(value = "entryId", required = false) Long entryId) {
 
-		FileRelation fileRelation = new FileRelation();
-		EntryQuery query = entryFactory.create();
-		query.joinFile(fileRelation);
-		List<Map<String, Object>> list =
-				query.select().list(
-						new JsonProjection()
-							.put("entryId", query.entryId())
-							.put("postDate", query.postDate())
-							.put("content", query.content())
-							.put("fileId", fileRelation.fileId)
-				);
-		return new ImmutableMap.Builder<String, Object>()
-				.put("entryList", list)
-				.build();
+		Optional<EntryId> optEntryId = Optional.empty();
+		if (entryId != null) {
+			optEntryId = Optional.of(new EntryId(entryId));
+		}
+		return getEntryList(optEntryId);
 	}
+
 
 	/**
 	 * <p>日記を投稿する。
@@ -119,5 +112,29 @@ public class EntryController {
 
 	}
 
+
+	// ----------------------------------------------------------------
+	//     ヘルパーメソッド
+	// ----------------------------------------------------------------
+	// 日記のエントリを取得する
+	private Map<String, Object> getEntryList(Optional<EntryId> optEntryId) {
+		final FileRelation fileRelation = new FileRelation();
+		final EntryQuery query = entryFactory.create();
+		query.joinFile(fileRelation);
+
+		optEntryId.ifPresent(entryId -> query.entryId(entryId));
+
+		List<Map<String, Object>> list =
+				query.select().list(
+						new JsonProjection()
+							.put("entryId", query.entryId())
+							.put("postDate", query.postDate())
+							.put("content", query.content())
+							.put("fileId", fileRelation.fileId)
+				);
+		return new ImmutableMap.Builder<String, Object>()
+				.put("entryList", list)
+				.build();
+	}
 
 }

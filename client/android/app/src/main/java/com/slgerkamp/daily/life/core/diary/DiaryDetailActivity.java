@@ -1,30 +1,25 @@
 package com.slgerkamp.daily.life.core.diary;
 
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.common.base.Optional;
-import com.slgerkamp.daily.life.MainActivity;
+import com.google.common.collect.ImmutableList;
 import com.slgerkamp.daily.life.R;
 import com.slgerkamp.daily.life.generic.Backend;
-import com.slgerkamp.daily.life.generic.ImageSelectionWizard;
 import com.slgerkamp.daily.life.infra.JSONData;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.util.Date;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
@@ -32,20 +27,17 @@ public class DiaryDetailActivity extends AppCompatActivity {
 
     @InjectView(R.id.message_image) ImageView imageView;
     @InjectView(R.id.message_content) TextView textView;
+    DiaryItem item;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        DiaryItem item = (DiaryItem)getIntent().getSerializableExtra("diaryItem");
+        getEntry((DiaryId)getIntent().getSerializableExtra("diaryId"));
 
         setContentView(R.layout.activity_diary_detail);
         ButterKnife.inject(this);
 
-        textView.setText(item.content);
-        if (item.optFileId.isPresent()) {
-            setUpImageId(item.optFileId.get());
-        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -85,6 +77,46 @@ public class DiaryDetailActivity extends AppCompatActivity {
     private void setUpImageId(Long id) {
         new Backend(DiaryDetailActivity.this).imageLoader()
                 .load(id).into(imageView);
+    }
+
+    private void getEntry(DiaryId diaryId) {
+        new Backend(this).get("entry")
+                .param("entryId", Long.toString(diaryId.value))
+                .toObservable()
+                .flatMap(new Func1<JSONData, Observable<List<JSONData>>>() {
+                    @Override
+                    public Observable<List<JSONData>> call(JSONData json) {
+                        return json.getList("entryList");
+                    }
+                })
+                .map(new Func1<List<JSONData>, List<DiaryItem>>() {
+                    @Override
+                    public List<DiaryItem> call(List<JSONData> jsonData) {
+
+                        ImmutableList.Builder<DiaryItem> builder = new ImmutableList.Builder<>();
+                        for (JSONData d : jsonData) {
+                            DiaryItem item = DiaryItem.fromJSON(d).toBlocking().lastOrDefault(null);
+                            if (item != null) {
+                                builder.add(item);
+                            } else {
+                                Log.e(DiaryFragment.class.getSimpleName(), "invalid data: " + d);
+                            }
+                        }
+                        return builder.build();
+                    }
+                })
+                .subscribe(new Action1<List<DiaryItem>>() {
+                    @Override
+                    public void call(List<DiaryItem> diaryItems) {
+
+                        Log.d("JSON:", diaryItems.get(0).toString());
+                        item = diaryItems.get(0);
+                        textView.setText(item.content);
+                        if (item.optFileId.isPresent()) {
+                            setUpImageId(item.optFileId.get());
+                        }
+                    }
+                });
     }
 
 }

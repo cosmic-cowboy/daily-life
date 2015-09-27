@@ -91,6 +91,11 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
                     getEntry();
                 }
             break;
+            case CALL_DIARY_DETAIL_ACTIVITY_REQUEST_CODE:
+                if (resultCode == Activity.RESULT_OK) {
+                    getEntry();
+                }
+                break;
         default:
             break;
         }
@@ -103,7 +108,7 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
         Object item = entityMap.get(position);
         if (item instanceof DiaryItem) {
             Intent intent = new Intent(getActivity(), DiaryDetailActivity.class);
-            intent.putExtra("diaryItem", (DiaryItem)item);
+            intent.putExtra("diaryId", ((DiaryItem) item).diaryId);
             startActivityForResult(intent, CALL_DIARY_DETAIL_ACTIVITY_REQUEST_CODE);
         }
     }
