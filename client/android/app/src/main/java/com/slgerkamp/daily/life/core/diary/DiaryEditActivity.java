@@ -65,8 +65,6 @@ public class DiaryEditActivity extends AppCompatActivity {
             // 保存ボタン
             case R.id.post_newDiary:
                 postEntry(editText.getText().toString());
-                Intent refresh = new Intent(this, MainActivity.class);
-                startActivity(refresh);
                 finish();
                 return true;
         }
