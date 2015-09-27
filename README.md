@@ -49,6 +49,10 @@
 
 `curl -v localhost:9000/user/api/v1/file/image?fileId=ファイルID -X GET -H "Content-Type: application/json"`
 
-### リンク
+### DBの確認方法
+
+`http://localhost:9000/console/`
+
+にアクセスし、driverClassName, url, username, passwordを入力
 
 [計画書](PLAN.md)
