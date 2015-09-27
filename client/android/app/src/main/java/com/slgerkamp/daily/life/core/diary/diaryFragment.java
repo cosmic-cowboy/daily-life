@@ -31,7 +31,7 @@ import rx.functions.Func1;
 /**
  * <p>日記の一覧画面を管理するクラスです。
  */
-public class DiaryFragment extends Fragment {
+public class DiaryFragment extends Fragment implements AbsListView.OnItemClickListener{
 
     @InjectView(android.R.id.list) AbsListView listView;
     @InjectView(R.id.first_fab) FloatingActionButton fab;
@@ -42,6 +42,7 @@ public class DiaryFragment extends Fragment {
     private Map<Integer, DiaryItem> entityMap;
 
     private static final int CALL_DIARY_EDIT_ACTIVITY_REQUEST_CODE = 123;
+    private static final int CALL_DIARY_DETAIL_ACTIVITY_REQUEST_CODE = 124;
 
     public DiaryFragment() {
         entityMap = new HashMap<>();
@@ -62,6 +63,7 @@ public class DiaryFragment extends Fragment {
         ButterKnife.inject(this, view);
 
         listView.setAdapter(diaryAdapter);
+        listView.setOnItemClickListener(this);
 
         return view;
     }
@@ -93,6 +95,19 @@ public class DiaryFragment extends Fragment {
             break;
         }
     }
+
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Activity activity = getActivity();
+        Object item = entityMap.get(position);
+        if (item instanceof DiaryItem) {
+            Intent intent = new Intent(getActivity(), DiaryDetailActivity.class);
+            intent.putExtra("diaryItem", (DiaryItem)item);
+            startActivityForResult(intent, CALL_DIARY_DETAIL_ACTIVITY_REQUEST_CODE);
+        }
+    }
+
 
     private class DiaryAdapter extends BaseAdapter {
 
