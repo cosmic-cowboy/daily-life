@@ -86,6 +86,7 @@ public class ImageSelectionWizard extends DialogFragment{
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+
         Activity activity = getActivity();
         if (resultCode != Activity.RESULT_OK) {
             close();
@@ -97,7 +98,16 @@ public class ImageSelectionWizard extends DialogFragment{
             close();
 
         } else if (requestCode == REQUEST_IMAGE_FROM_LIBRARY) {
-            signal.onNext(BitmapFactory.decodeFile(new File(data.getData().getPath()).getAbsolutePath()));
+            Uri image = data.getData();
+
+            Bitmap bitmap;
+            try{
+                bitmap = MediaStore.Images.Media.getBitmap(this.getActivity().getContentResolver(), image);
+            } catch(IOException e){
+               throw new IllegalArgumentException(e);
+            }
+
+            signal.onNext(bitmap);
             close();
 
         } else {

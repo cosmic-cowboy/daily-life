@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.collect.ImmutableMap;
+import com.slgerkamp.daily.life.core.application.controller.user.api.v1.form.EntryForm;
 import com.slgerkamp.daily.life.core.domain.entry.EntryQuery;
 import com.slgerkamp.daily.life.core.domain.entry.EntryRepository;
 import com.slgerkamp.daily.life.core.domain.entry.EntryId;
@@ -23,6 +24,7 @@ import com.slgerkamp.daily.life.generic.domain.file.IllegalFileException;
 import com.slgerkamp.daily.life.generic.domain.file.ImageRegistrationService;
 import com.slgerkamp.daily.life.infra.db.query.JsonProjection;
 import com.slgerkamp.daily.life.infra.fileio.FileId;
+import com.slgerkamp.daily.life.infra.fileio.FileRelation;
 import com.slgerkamp.daily.life.infra.fileio.temp.TempFileId;
 
 
@@ -51,13 +53,16 @@ public class EntryController {
 	@RequestMapping(method = RequestMethod.GET)
 	public Map<String, Object> list() {
 
+		FileRelation fileRelation = new FileRelation();
 		EntryQuery query = entryFactory.create();
+		query.joinFile(fileRelation);
 		List<Map<String, Object>> list =
 				query.select().list(
 						new JsonProjection()
 							.put("entryId", query.entryId())
 							.put("postDate", query.postDate())
 							.put("content", query.content())
+							.put("fileId", fileRelation.fileId)
 				);
 		return new ImmutableMap.Builder<String, Object>()
 				.put("entryList", list)
@@ -66,12 +71,13 @@ public class EntryController {
 
 	/**
 	 * <p>日記を投稿する。
-	 * @param entry
+	 * @param entryForm
 	 */
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Map<String, Object> post(@RequestBody String content) {
-		EntryId entryId = entryRepositoryFactory.create().create(content);
+	public Map<String, Object> post(@RequestBody EntryForm entryForm) {
+		EntryRepository repository = entryRepositoryFactory.create();
+		EntryId entryId = entryForm.create(repository);
 		return new ImmutableMap.Builder<String, Object>()
 				.put("entryId", entryId.longValue())
 				.build();

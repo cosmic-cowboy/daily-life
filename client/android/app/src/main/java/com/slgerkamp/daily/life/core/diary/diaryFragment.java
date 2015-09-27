@@ -1,5 +1,6 @@
 package com.slgerkamp.daily.life.core.diary;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,7 +31,7 @@ import rx.functions.Func1;
 /**
  * <p>日記の一覧画面を管理するクラスです。
  */
-public class DiaryFragment extends Fragment implements AbsListView.OnItemClickListener {
+public class DiaryFragment extends Fragment {
 
     @InjectView(android.R.id.list) AbsListView listView;
     @InjectView(R.id.first_fab) FloatingActionButton fab;
@@ -39,6 +40,8 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
 
     // TODO リストが他にできたら汎用的なEntityListをつくる
     private Map<Integer, DiaryItem> entityMap;
+
+    private static final int CALL_DIARY_EDIT_ACITIVITY_REQUEST_CODE = 123;
 
     public DiaryFragment() {
         entityMap = new HashMap<>();
@@ -58,24 +61,37 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
 
         ButterKnife.inject(this, view);
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), DiaryEditActivity.class);
-                getActivity().startActivity(intent);
-            }
-        });
-
         listView.setAdapter(diaryAdapter);
-
-        listView.setOnItemClickListener(this);
 
         return view;
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(getActivity(), DiaryEditActivity.class);
+                startActivityForResult(intent, CALL_DIARY_EDIT_ACITIVITY_REQUEST_CODE);
+            }
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case CALL_DIARY_EDIT_ACITIVITY_REQUEST_CODE:
+                if (resultCode == Activity.RESULT_OK) {
+                    getEntry();
+                }
+            break;
+        default:
+            break;
+        }
     }
 
     private class DiaryAdapter extends BaseAdapter {
@@ -105,7 +121,7 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
             }
 
             DiaryCell cell = new DiaryCell(v);
-            cell.setItem(entityMap.get(position));
+            cell.setItem(entityMap.get(position), new Backend(getActivity()).imageLoader());
 
             return v;
         }

@@ -2,6 +2,7 @@ package com.slgerkamp.daily.life.core.domain.entry;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -44,7 +45,7 @@ public final class EntryRepository {
 	/**
 	 * <p>日記エントリを作成します。
 	 */
-	public EntryId create(final String content) {
+	public EntryId create(final String content, Optional<Long> optFileId) {
 
 		// 登録情報の整理
 		final Timestamp now = Timestamp.from(Instant.now());
@@ -57,7 +58,7 @@ public final class EntryRepository {
 				.set(e.createDate, now)
 				.set(e.updateDate, now)
 				.set(e.postDate, now);
-
+		optFileId.ifPresent(fileId -> insert.set(e.fileId, fileId));
 		insert.execute();
 
 		return entryId;

@@ -4,9 +4,11 @@ import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.slgerkamp.daily.life.R;
+import com.slgerkamp.daily.life.generic.Backend;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -18,15 +20,19 @@ public class DiaryCell {
 
     @InjectView(R.id.post_date) TextView post_date;
     @InjectView(R.id.content) TextView content;
+    @InjectView(R.id.picture) ImageView picture;
 
     public DiaryCell(View view){
         ButterKnife.inject(this, view);
     }
 
-    public void setItem(DiaryItem item) {
+    public void setItem(DiaryItem item, Backend.ImageLoader loader) {
         post_date.setText(DateFormat.format("M/d", item.postDate).toString());
         content.setText(item.content);
         ellipsizeMultilineText(content, 2);
+        if (item.optFileId.isPresent()) {
+            loader.load(item.optFileId.get()).into(picture);
+        }
     }
 
     /**
