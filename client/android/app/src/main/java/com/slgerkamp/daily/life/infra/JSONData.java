@@ -1,5 +1,6 @@
 package com.slgerkamp.daily.life.infra;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 
 import org.json.JSONArray;
@@ -66,6 +67,22 @@ public class JSONData {
             return Observable.error(th);
         }
     }
+
+    public Observable<Optional<Long>> optLong(String path, String... subpath) {
+        try {
+            Map.Entry<JSONObject, String> parent = component(path, subpath);
+            // この処理で null は OL に変換されてしまうので、現状、0L は null 扱いになってしまう
+            Long value = parent.getKey().optLong(parent.getValue());
+            Optional<Long> optValue = Optional.absent();
+            if ( value != 0L ) {
+                optValue = Optional.of(value);
+            }
+            return Observable.just(optValue);
+        } catch (Throwable th) {
+            return Observable.error(th);
+        }
+    }
+
     private Map.Entry<JSONObject, String> component(String first, String... next) throws JSONException {
         if (next.length == 0) return new AbstractMap.SimpleImmutableEntry<>(object, first);
 

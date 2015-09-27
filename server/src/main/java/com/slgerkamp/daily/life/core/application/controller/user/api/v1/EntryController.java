@@ -24,6 +24,7 @@ import com.slgerkamp.daily.life.generic.domain.file.IllegalFileException;
 import com.slgerkamp.daily.life.generic.domain.file.ImageRegistrationService;
 import com.slgerkamp.daily.life.infra.db.query.JsonProjection;
 import com.slgerkamp.daily.life.infra.fileio.FileId;
+import com.slgerkamp.daily.life.infra.fileio.FileRelation;
 import com.slgerkamp.daily.life.infra.fileio.temp.TempFileId;
 
 
@@ -52,13 +53,16 @@ public class EntryController {
 	@RequestMapping(method = RequestMethod.GET)
 	public Map<String, Object> list() {
 
+		FileRelation fileRelation = new FileRelation();
 		EntryQuery query = entryFactory.create();
+		query.joinFile(fileRelation);
 		List<Map<String, Object>> list =
 				query.select().list(
 						new JsonProjection()
 							.put("entryId", query.entryId())
 							.put("postDate", query.postDate())
 							.put("content", query.content())
+							.put("fileId", fileRelation.fileId)
 				);
 		return new ImmutableMap.Builder<String, Object>()
 				.put("entryList", list)

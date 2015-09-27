@@ -11,6 +11,7 @@ import com.slgerkamp.daily.life.infra.db.DbService;
 import com.slgerkamp.daily.life.infra.db.query.DailyLifeQuery;
 import com.slgerkamp.daily.life.infra.db.query.ExpressionUtils;
 import com.slgerkamp.daily.life.infra.db.query.Selection;
+import com.slgerkamp.daily.life.infra.fileio.FileRelation;
 
 
 /**
@@ -63,5 +64,17 @@ public final class EntryQuery {
 	public Expression<Long> postDate() {
 		return ExpressionUtils.select(entry.postDate).then(Timestamp::getTime);
 	}
+
+	// ----------------------------------------------------------------
+	//     フィルタ　Fileテーブル
+	// ----------------------------------------------------------------
+	/**
+	 * ファイル情報を取得するために join します。
+	 */
+	public EntryQuery joinFile(FileRelation relation) {
+		relation.leftJoin(query, entry.fileId);
+		return this;
+	}
+
 }
 
