@@ -41,7 +41,7 @@ public class DiaryFragment extends Fragment {
     // TODO リストが他にできたら汎用的なEntityListをつくる
     private Map<Integer, DiaryItem> entityMap;
 
-    private static final int CALL_DIARY_EDIT_ACITIVITY_REQUEST_CODE = 123;
+    private static final int CALL_DIARY_EDIT_ACTIVITY_REQUEST_CODE = 123;
 
     public DiaryFragment() {
         entityMap = new HashMap<>();
@@ -75,7 +75,7 @@ public class DiaryFragment extends Fragment {
             public void onClick(View v) {
 
                 Intent intent = new Intent(getActivity(), DiaryEditActivity.class);
-                startActivityForResult(intent, CALL_DIARY_EDIT_ACITIVITY_REQUEST_CODE);
+                startActivityForResult(intent, CALL_DIARY_EDIT_ACTIVITY_REQUEST_CODE);
             }
         });
     }
@@ -84,7 +84,7 @@ public class DiaryFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case CALL_DIARY_EDIT_ACITIVITY_REQUEST_CODE:
+            case CALL_DIARY_EDIT_ACTIVITY_REQUEST_CODE:
                 if (resultCode == Activity.RESULT_OK) {
                     getEntry();
                 }
