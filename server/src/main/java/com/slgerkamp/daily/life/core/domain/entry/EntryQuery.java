@@ -1,7 +1,5 @@
 package com.slgerkamp.daily.life.core.domain.entry;
 
-import java.sql.Timestamp;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -62,7 +60,7 @@ public final class EntryQuery {
 		return entry.content;
 	}
 	public Expression<Long> postDate() {
-		return ExpressionUtils.select(entry.postDate).then(Timestamp::getTime);
+		return entry.postDate;
 	}
 
 	// ----------------------------------------------------------------
@@ -81,6 +79,14 @@ public final class EntryQuery {
 	 */
 	public EntryQuery joinFile(FileRelation relation) {
 		relation.leftJoin(query, entry.fileId);
+		return this;
+	}
+
+	// ----------------------------------------------------------------
+	//     ソート
+	// ----------------------------------------------------------------
+	public EntryQuery orderByPostDateDesc() {
+		query.orderBy(entry.postDate.desc());
 		return this;
 	}
 

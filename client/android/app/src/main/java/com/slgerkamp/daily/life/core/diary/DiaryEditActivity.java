@@ -18,6 +18,7 @@ import com.slgerkamp.daily.life.R;
 import com.slgerkamp.daily.life.generic.Backend;
 import com.slgerkamp.daily.life.generic.ImageSelectionWizard;
 import com.slgerkamp.daily.life.infra.JSONData;
+import com.slgerkamp.daily.life.infra.Utils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -33,17 +34,19 @@ public class DiaryEditActivity extends AppCompatActivity {
     @InjectView(R.id.message_image) ImageView imageView;
     @InjectView(R.id.message_input) EditText editText;
     Optional<Long> optFileId;
+    PostDate postDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         optFileId = Optional.absent();
+        postDate = PostDate.of(new Date());
         setContentView(R.layout.activity_diary_edit);
         ButterKnife.inject(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(Long.toString(new Date().getTime()));
+        getSupportActionBar().setTitle(Utils.localDate(this, postDate.value));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
@@ -80,7 +83,7 @@ public class DiaryEditActivity extends AppCompatActivity {
                 return true;
             // 保存ボタン
             case R.id.post_newDiary:
-                postEntry(editText.getText().toString());
+                postEntry(editText.getText().toString(), postDate.getString());
                 setResult(RESULT_OK);
                 finish();
                 return true;
@@ -90,10 +93,11 @@ public class DiaryEditActivity extends AppCompatActivity {
     }
 
 
-    private void postEntry(String content) {
+    private void postEntry(String content, String postDate) {
 
         Backend.Post post = new Backend(this).post("entry")
-                .param("content", content);
+                .param("content", content)
+                .param("postDate", postDate);
         if (optFileId.isPresent()){
             post.param("fileId", Long.toString(optFileId.get()));
         }

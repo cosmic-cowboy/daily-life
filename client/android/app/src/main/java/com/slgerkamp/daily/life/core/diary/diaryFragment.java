@@ -141,7 +141,7 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
             }
 
             DiaryCell cell = new DiaryCell(v);
-            cell.setItem(entityMap.get(position), new Backend(getActivity()).imageLoader());
+            cell.setItem(entityMap.get(position), getActivity(), new Backend(getActivity()).imageLoader());
 
             return v;
         }

@@ -13,8 +13,8 @@ import com.google.common.collect.ImmutableList;
 import com.slgerkamp.daily.life.R;
 import com.slgerkamp.daily.life.generic.Backend;
 import com.slgerkamp.daily.life.infra.JSONData;
+import com.slgerkamp.daily.life.infra.Utils;
 
-import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -33,17 +33,13 @@ public class DiaryDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getEntry((DiaryId)getIntent().getSerializableExtra("diaryId"));
-
         setContentView(R.layout.activity_diary_detail);
         ButterKnife.inject(this);
-
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(Long.toString(new Date().getTime()));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        getEntry((DiaryId) getIntent().getSerializableExtra("diaryId"));
     }
 
 
@@ -108,9 +104,8 @@ public class DiaryDetailActivity extends AppCompatActivity {
                 .subscribe(new Action1<List<DiaryItem>>() {
                     @Override
                     public void call(List<DiaryItem> diaryItems) {
-
-                        Log.d("JSON:", diaryItems.get(0).toString());
                         item = diaryItems.get(0);
+                        getSupportActionBar().setTitle(Utils.localDate(getParent(), item.postDate.value));
                         textView.setText(item.content);
                         if (item.optFileId.isPresent()) {
                             setUpImageId(item.optFileId.get());

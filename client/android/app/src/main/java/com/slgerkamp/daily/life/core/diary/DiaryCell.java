@@ -1,7 +1,7 @@
 package com.slgerkamp.daily.life.core.diary;
 
+import android.content.Context;
 import android.text.TextUtils;
-import android.text.format.DateFormat;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.slgerkamp.daily.life.R;
 import com.slgerkamp.daily.life.generic.Backend;
+import com.slgerkamp.daily.life.infra.Utils;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -26,8 +27,9 @@ public class DiaryCell {
         ButterKnife.inject(this, view);
     }
 
-    public void setItem(DiaryItem item, Backend.ImageLoader loader) {
-        post_date.setText(DateFormat.format("M/d", item.postDate).toString());
+    public void setItem(DiaryItem item, Context context, Backend.ImageLoader loader) {
+
+        post_date.setText(Utils.localDate(context, item.postDate.value));
         content.setText(item.content);
         ellipsizeMultilineText(content, 2);
         if (item.optFileId.isPresent()) {
