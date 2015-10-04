@@ -1,5 +1,6 @@
 package com.slgerkamp.daily.life.core.application.controller.user.api.v1;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.io.InputStream;
@@ -23,6 +24,7 @@ import com.slgerkamp.daily.life.core.domain.entry.EntryId;
 import com.slgerkamp.daily.life.generic.application.PathHelper;
 import com.slgerkamp.daily.life.generic.domain.file.IllegalFileException;
 import com.slgerkamp.daily.life.generic.domain.file.ImageRegistrationService;
+import com.slgerkamp.daily.life.infra.db.query.ExpressionUtils;
 import com.slgerkamp.daily.life.infra.db.query.JsonProjection;
 import com.slgerkamp.daily.life.infra.fileio.FileId;
 import com.slgerkamp.daily.life.infra.fileio.FileRelation;
@@ -128,7 +130,7 @@ public class EntryController {
 				query.select().list(
 						new JsonProjection()
 							.put("entryId", query.entryId())
-							.put("postDate", query.postDate())
+							.put("postDate", ExpressionUtils.select(query.postDate()).then(LocalDate::toString))
 							.put("content", query.content())
 							.put("fileId", fileRelation.fileId)
 				);

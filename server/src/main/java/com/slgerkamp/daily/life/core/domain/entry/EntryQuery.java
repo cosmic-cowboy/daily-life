@@ -1,6 +1,6 @@
 package com.slgerkamp.daily.life.core.domain.entry;
 
-import java.sql.Timestamp;
+import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -61,8 +61,8 @@ public final class EntryQuery {
 	public Expression<String> content() {
 		return entry.content;
 	}
-	public Expression<Long> postDate() {
-		return ExpressionUtils.select(entry.postDate).then(Timestamp::getTime);
+	public Expression<LocalDate> postDate() {
+		return ExpressionUtils.select(entry.postDate).then(LocalDate::parse);
 	}
 
 	// ----------------------------------------------------------------

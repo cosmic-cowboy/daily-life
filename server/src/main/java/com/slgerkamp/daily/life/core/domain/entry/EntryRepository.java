@@ -2,6 +2,7 @@ package com.slgerkamp.daily.life.core.domain.entry;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,7 @@ public final class EntryRepository {
 	/**
 	 * <p>日記エントリを作成します。
 	 */
-	public EntryId create(final String content, Optional<Long> optFileId) {
+	public EntryId create(final String content, final LocalDate localDate, Optional<Long> optFileId) {
 
 		// 登録情報の整理
 		final Timestamp now = Timestamp.from(Instant.now());
@@ -55,9 +56,9 @@ public final class EntryRepository {
 		SQLInsertClause insert = dbService.insert(e)
 				.set(e.entryId, entryId.longValue())
 				.set(e.content, content)
+				.set(e.postDate, localDate.toString())
 				.set(e.createDate, now)
-				.set(e.updateDate, now)
-				.set(e.postDate, now);
+				.set(e.updateDate, now);
 		optFileId.ifPresent(fileId -> insert.set(e.fileId, fileId));
 		insert.execute();
 
