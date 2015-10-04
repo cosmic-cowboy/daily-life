@@ -13,6 +13,23 @@
 
 `curl -v localhost:9000/user/api/v1/entry -X GET -H "Content-Type: application/json"`
 
+#### 指定した日記取得
+
+| HTTPメソッド | URI |
+|:-----------|:------------:|
+| GET       | (ホスト名)/user/api/v1/entry|
+
+リクエストデータ
+
+| パラメータ名 | 指定する値 | 必須 | 説明 |
+|:-----------|:--------:|:---:|:----:|
+| entryId     |日記エントリID|必須|日記エントリのIDを指定します|
+
+例）
+
+`curl -v localhost:9000/user/api/v1/entry?entryId=日記エントリID -X GET -H "Content-Type: application/json"`
+
+
 #### 日記投稿
 
 | HTTPメソッド | URI |
@@ -69,6 +86,23 @@
 例）
 
 `curl -v localhost:9000/user/api/v1/file/image?fileId=ファイルID -X GET -H "Content-Type: application/json"`
+
+#### 指定した日記の削除
+
+| HTTPメソッド | URI |
+|:-----------|:------------:|
+| GET       | (ホスト名)/user/api/v1/entry|
+
+リクエストデータ
+
+| パラメータ名 | 指定する値 | 必須 | 説明 |
+|:-----------|:--------:|:---:|:----:|
+| entryId    |日記エントリID|必須|日記エントリのIDを指定します|
+
+例）
+
+`curl -v localhost:9000/user/api/v1/entry?entryId=日記エントリID -X DELETE -H "Content-Type: application/json"`
+
 
 ### DBの確認方法
 

@@ -1,12 +1,14 @@
 package com.slgerkamp.daily.life.core.diary;
 
+import java.io.Serializable;
+
 import rx.Observable;
 import rx.functions.Func1;
 
 /**
  * <p>日記を一意で識別するためのIDクラスです。
  */
-public class DiaryId {
+public class DiaryId implements Serializable{
 
     public final long value;
 
