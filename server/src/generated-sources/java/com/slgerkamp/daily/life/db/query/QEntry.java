@@ -32,7 +32,7 @@ public class QEntry extends com.querydsl.sql.RelationalPathBase<QEntry> {
 
     public final NumberPath<Long> fileId = createNumber("fileId", Long.class);
 
-    public final DateTimePath<java.sql.Timestamp> postDate = createDateTime("postDate", java.sql.Timestamp.class);
+    public final StringPath postDate = createString("postDate");
 
     public final DateTimePath<java.sql.Timestamp> updateDate = createDateTime("updateDate", java.sql.Timestamp.class);
 
@@ -65,7 +65,7 @@ public class QEntry extends com.querydsl.sql.RelationalPathBase<QEntry> {
         addMetadata(createDate, ColumnMetadata.named("CREATE_DATE").withIndex(5).ofType(Types.TIMESTAMP).withSize(23).withDigits(10).notNull());
         addMetadata(entryId, ColumnMetadata.named("ENTRY_ID").withIndex(1).ofType(Types.BIGINT).withSize(19).notNull());
         addMetadata(fileId, ColumnMetadata.named("FILE_ID").withIndex(3).ofType(Types.BIGINT).withSize(19));
-        addMetadata(postDate, ColumnMetadata.named("POST_DATE").withIndex(4).ofType(Types.TIMESTAMP).withSize(23).withDigits(10).notNull());
+        addMetadata(postDate, ColumnMetadata.named("POST_DATE").withIndex(4).ofType(Types.VARCHAR).withSize(2147483647).notNull());
         addMetadata(updateDate, ColumnMetadata.named("UPDATE_DATE").withIndex(6).ofType(Types.TIMESTAMP).withSize(23).withDigits(10).notNull());
     }
 
