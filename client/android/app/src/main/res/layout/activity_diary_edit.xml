@@ -21,7 +21,7 @@
         android:title="@string/action_edit_diary"
         android:theme="@style/AppToolBar"
         app:popupTheme="@style/AppTheme"
-        android:elevation="4dp" />
+        android:elevation="@dimen/toolbar_elevation" />
 
     <ImageView
         android:id="@+id/message_image"
@@ -30,7 +30,6 @@
         android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
         />
 
     <EditText
@@ -43,7 +42,7 @@
         android:inputType="textMultiLine"
         android:scrollbars="vertical"
         android:hint="@string/new_diary_edit_text_hint"
-        android:padding="20dp"
+        android:padding="@dimen/detail_text_margin"
         />
 
 </android.support.v7.widget.GridLayout>

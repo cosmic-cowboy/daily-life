@@ -12,9 +12,9 @@
         app:layout_column="0"
         app:layout_row="0"
         app:layout_gravity="fill_horizontal"
-        android:layout_marginTop="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_width="0dp"
+        android:layout_marginTop="@dimen/list_view_standard_margin"
+        android:layout_marginLeft="@dimen/list_view_standard_margin"
+        android:layout_width="@dimen/list_text_default_size"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="0:00"/>
@@ -25,9 +25,9 @@
         app:layout_row="1"
         app:layout_columnWeight="1"
         app:layout_gravity="fill_horizontal"
-        android:layout_marginTop="4dp"
-        android:layout_marginLeft="8dp"
-        android:layout_width="0dp"
+        android:layout_marginTop="@dimen/list_view_small_margin"
+        android:layout_marginLeft="@dimen/list_view_standard_margin"
+        android:layout_width="@dimen/list_text_default_size"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="status"
@@ -40,8 +40,8 @@
         app:layout_column="1"
         app:layout_row="0"
         app:layout_rowSpan="2"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="@dimen/list_image_default_size"
+        android:layout_height="@dimen/list_image_default_size"
         />
 
 </android.support.v7.widget.GridLayout>

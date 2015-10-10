@@ -128,15 +128,6 @@ public class DiaryDetailActivity extends AppCompatActivity {
     }
 
     /**
-     * <p>指定されたファイルIDの画像を取得し、Viewに配置する</p>
-     * @param id
-     */
-    private void setUpImageId(Long id) {
-        new Backend(DiaryDetailActivity.this).imageLoader()
-                .load(id).into(imageView);
-    }
-
-    /**
      * <p>指定された日記IDから日記情報を取得し、タイトル、日記内容をViewに配置する</p>
      * @param diaryId
      */
@@ -178,5 +169,19 @@ public class DiaryDetailActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    /**
+     * <p>指定されたファイルIDの画像を取得し、Viewに配置する</p>
+     * @param id
+     */
+    private void setUpImageId(Long id) {
+        int displaySize = getResources().getDimensionPixelSize(R.dimen.list_image_size);
+        imageView.getLayoutParams().height = displaySize;
+        int paddingSize = getResources().getDimensionPixelSize(R.dimen.list_image_padding_size);
+        imageView.setPadding(paddingSize, paddingSize, paddingSize, paddingSize);
+        new Backend(DiaryDetailActivity.this).imageLoader()
+                .load(id).into(imageView);
+    }
+
 
 }
