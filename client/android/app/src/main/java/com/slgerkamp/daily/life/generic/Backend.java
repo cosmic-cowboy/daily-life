@@ -55,9 +55,18 @@ public class Backend {
     //     各種リクエスト処理
     // ----------------------------------------------------------------
 
+    /**
+     * <p>このメソッドを使ってGetクラスのインスタンス化を行う</>
+     * @param path
+     * @return
+     */
     public Get get(String path) {
         return new Get(path.split("/"));
     }
+
+    /**
+     * <p>GETメソッド用ビルダークラス</>
+     */
     public class Get {
         private final HttpUrl.Builder builder = builder();
 
@@ -79,10 +88,17 @@ public class Backend {
         }
     }
 
-
+    /**
+     * <p>このメソッドを使ってPostクラスのインスタンス化を行う</>
+     * @param path
+     * @return
+     */
     public Post post(String path) {
         return new Post(path.split("/"));
     }
+    /**
+     * <p>POSTメソッド用ビルダークラス</>
+     */
     public class Post {
         private final Request.Builder builder;
         private final ImmutableMap.Builder<String, Object> params = new ImmutableMap.Builder<>();
@@ -112,6 +128,40 @@ public class Backend {
             return Observable.just(req).flatMap(new RequestExecutor());
         }
     }
+
+
+    /**
+     * <p>このメソッドを使ってDeleteクラスのインスタンス化を行う</>
+     * @param path
+     * @return
+     */
+    public Delete delete(String path) {
+        return new Delete(path.split("/"));
+    }
+    /**
+     * <p>DELETEメソッド用ビルダークラス</>
+     */
+    public class Delete {
+        private final HttpUrl.Builder builder = builder();
+
+        // コンストラクタ呼び出し時にPathを設定する
+        public Delete(String[] path) {
+            for (String p : path) builder.addPathSegment(p);
+        }
+
+        // queryパラメータを設定する
+        public Delete param(String key, String value) {
+            builder.addQueryParameter(key, value);
+            return this;
+        }
+
+        // リクエストを実施し、結果をObservableで返却する
+        public Observable<JSONData> toObservable() {
+            Request req = new Request.Builder().url(builder.build().toString()).delete().build();
+            return Observable.just(req).flatMap(new RequestExecutor());
+        }
+    }
+
 
     /**
      * ファイルをアップロードする。
