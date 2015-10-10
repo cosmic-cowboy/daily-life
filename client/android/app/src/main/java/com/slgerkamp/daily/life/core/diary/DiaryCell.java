@@ -33,6 +33,12 @@ public class DiaryCell {
         content.setText(item.content);
         ellipsizeMultilineText(content, 2);
         if (item.optFileId.isPresent()) {
+            float displayScale = context.getResources().getDisplayMetrics().density;
+            int displaySize = (int) displayScale * 76;
+            picture.getLayoutParams().height = displaySize;
+            picture.getLayoutParams().width = displaySize;
+            int paddingSize = (int) displayScale * 8;
+            picture.setPadding(paddingSize, paddingSize, paddingSize, paddingSize);
             loader.load(item.optFileId.get()).into(picture);
         }
     }
