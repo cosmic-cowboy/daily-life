@@ -19,7 +19,7 @@
         android:title="@string/diary_list"
         android:theme="@style/AppToolBar"
         app:popupTheme="@style/AppTheme"
-        android:elevation="4dp"/>
+        android:elevation="@dimen/toolbar_elevation"/>
 
     <fragment
         android:id="@+id/pager"

@@ -20,7 +20,7 @@
         android:background="@color/nav_bar"
         android:theme="@style/AppToolBar"
         app:popupTheme="@style/AppTheme"
-        android:elevation="4dp" />
+        android:elevation="@dimen/toolbar_elevation" />
 
     <ImageView
         android:id="@+id/message_image"
@@ -28,8 +28,7 @@
         app:layout_column="0"
         android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
+        android:layout_height="@dimen/list_image_default_size"
         />
 
     <TextView
@@ -40,7 +39,7 @@
         app:layout_column="0"
         android:gravity="start"
         android:scrollbars="vertical"
-        android:padding="20dp"
+        android:layout_margin="@dimen/detail_text_margin"
         />
 
 </android.support.v7.widget.GridLayout>

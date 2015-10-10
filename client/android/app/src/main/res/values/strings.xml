@@ -6,5 +6,16 @@
     <string name="action_settings">設定</string>
     <string name="button_camera">カメラ</string>
     <string name="button_save">保存</string>
+    <string name="button_delete">削除</string>
     <string name="new_diary_edit_text_hint">新しい日記を作成する</string>
+
+    <string name="ok">はい</string>
+    <string name="cancel">いいえ</string>
+
+    <string name="confirm_delete">日記を削除してよろしいですか</string>
+    <string name="notify_delete">日記を削除しました</string>
+    <string name="notify_not_delete">日記を削除することができませんでした</string>
+    <string name="notify_save">日記を登録しました</string>
+    <string name="notify_not_save">日記を登録することができませんでした</string>
+
 </resources>

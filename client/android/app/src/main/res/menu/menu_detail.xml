@@ -1,0 +1,9 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".DiaryDetailActivity">
+
+    <item android:id="@+id/delete_diary"
+        android:title="@string/button_delete"
+        android:orderInCategory="100" app:showAsAction="always" />
+</menu>
