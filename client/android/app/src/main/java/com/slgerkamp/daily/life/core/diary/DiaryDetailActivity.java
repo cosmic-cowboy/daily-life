@@ -9,12 +9,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.common.collect.ImmutableList;
 import com.slgerkamp.daily.life.R;
 import com.slgerkamp.daily.life.generic.Backend;
+import com.slgerkamp.daily.life.generic.ImageFullscreenDialog;
 import com.slgerkamp.daily.life.infra.JSONData;
 import com.slgerkamp.daily.life.infra.Utils;
 
@@ -174,13 +176,22 @@ public class DiaryDetailActivity extends AppCompatActivity {
      * <p>指定されたファイルIDの画像を取得し、Viewに配置する</p>
      * @param id
      */
-    private void setUpImageId(Long id) {
+    private void setUpImageId(final Long id) {
         int displaySize = getResources().getDimensionPixelSize(R.dimen.list_image_size);
         imageView.getLayoutParams().height = displaySize;
         int paddingSize = getResources().getDimensionPixelSize(R.dimen.list_image_padding_size);
         imageView.setPadding(paddingSize, paddingSize, paddingSize, paddingSize);
         new Backend(DiaryDetailActivity.this).imageLoader()
                 .load(id).into(imageView);
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ImageFullscreenDialog
+                        .newInstance(id)
+                        .show(DiaryDetailActivity.this.getFragmentManager(), "imageFullScreen");
+            }
+        });
     }
 
 

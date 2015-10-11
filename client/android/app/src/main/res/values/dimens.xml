@@ -17,4 +17,6 @@
 
     <dimen name="floating_button_margin">16dp</dimen>
 
+    <dimen name="fullscreen_cancel_button_padding">16dp</dimen>
+
 </resources>
