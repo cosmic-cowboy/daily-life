@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="nav_bar">#e56200</color>
+    <color name="nav_bar">#009688</color>
     <color name="primary">#E8E8E8</color>
     <color name="status_bar">#66000000</color>
     <color name="accent">#ffffff</color>

@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -16,8 +19,11 @@ import android.widget.BaseAdapter;
 import com.google.common.collect.ImmutableList;
 import com.slgerkamp.daily.life.R;
 import com.slgerkamp.daily.life.generic.Backend;
+import com.slgerkamp.daily.life.infra.DiaryDatePickerDialog;
 import com.slgerkamp.daily.life.infra.JSONData;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +37,7 @@ import rx.functions.Func1;
 /**
  * <p>日記の一覧画面を管理するクラスです。
  */
-public class DiaryFragment extends Fragment implements AbsListView.OnItemClickListener{
+public class DiaryFragment extends Fragment implements AbsListView.OnItemClickListener, DatePickerDialog.OnDateSetListener{
 
     @InjectView(android.R.id.list) AbsListView listView;
     @InjectView(R.id.first_fab) FloatingActionButton fab;
@@ -59,6 +65,7 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.diary_fragment, container, false);
+        setHasOptionsMenu(true);
 
         ButterKnife.inject(this, view);
 
@@ -66,6 +73,30 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
         listView.setOnItemClickListener(this);
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_diary, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.open_calendar_dialog:
+                Calendar now = Calendar.getInstance();
+                DiaryDatePickerDialog dpd = DiaryDatePickerDialog.newInstance(
+                        this,
+                        now.get(Calendar.YEAR),
+                        now.get(Calendar.MONTH),
+                        now.get(Calendar.DAY_OF_MONTH)
+                );
+                dpd.show(getFragmentManager(), "Datepickerdialog");
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -111,6 +142,23 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
             intent.putExtra("diaryId", ((DiaryItem) item).diaryId);
             startActivityForResult(intent, CALL_DIARY_DETAIL_ACTIVITY_REQUEST_CODE);
         }
+    }
+
+    /**
+     * <p>
+     *     wdullaer/MaterialDateTimePicker
+     *     https://github.com/wdullaer/MaterialDateTimePicker
+     * </p>
+     *
+     * @param datePickerDialog
+     * @param year
+     * @param monthOfYear
+     * @param dayOfMonth
+     */
+    @Override
+    public void onDateSet(DatePickerDialog datePickerDialog, int year, int monthOfYear, int dayOfMonth) {
+//        String date = "You picked the following date: "+dayOfMonth+"/"+(monthOfYear+1)+"/"+year;
+//        dateTextView.setText(date);
     }
 
 

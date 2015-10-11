@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".MainActivity">
+
+    <item android:id="@+id/open_calendar_dialog"
+        android:title="@string/button_calendar"
+        android:icon="@android:drawable/ic_menu_today"
+        android:orderInCategory="100" app:showAsAction="always" />
+</menu>
