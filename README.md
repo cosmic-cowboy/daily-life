@@ -29,6 +29,16 @@
 
 `curl -v localhost:9000/user/api/v1/entry?entryId=日記エントリID -X GET -H "Content-Type: application/json"`
 
+#### 投稿日取得
+
+| HTTPメソッド | URI |
+|:-----------|:------------:|
+| GET       | (ホスト名)/user/api/v1/entry/postdate|
+
+例）
+
+`curl -v localhost:9000/user/api/v1/entry/postdate -X GET -H "Content-Type: application/json"`
+
 
 #### 日記投稿
 
