@@ -3,6 +3,7 @@ package com.slgerkamp.daily.life.core.diary;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import rx.Observable;
@@ -33,9 +34,22 @@ public class PostDate implements Serializable {
         return new PostDate(date);
     }
 
-    // 登録用String型のPostDate情報
+    /**
+     * <p>投稿日をyyyyMMddの文字列に変換する</p>
+     * @return yyyyMMddの文字列に変換された投稿日
+     */
     public String getString() {
         return new SimpleDateFormat(DATE_FORMAT).format(value);
+    }
+
+    /**
+     * <p>投稿日をCalendarクラスに変換する。</p>
+     * @return Calendarクラスに変換された投稿日
+     */
+    public Calendar toCalendar(){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(value);
+        return cal;
     }
 
     private Date setDate(Long postDate) {

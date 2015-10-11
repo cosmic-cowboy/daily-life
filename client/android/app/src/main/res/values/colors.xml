@@ -30,4 +30,10 @@
 
     <color name="edit_background">@android:color/white</color>
 
+    <!--================================================================
+        カレンダーのoverride
+        ================================================================-->
+
+    <color name="mdtp_date_picker_text_highlighted">@color/material_teal_500</color>
+
 </resources>
