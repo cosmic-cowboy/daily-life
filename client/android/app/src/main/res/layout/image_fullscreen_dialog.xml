@@ -7,6 +7,7 @@
 
     <ImageView
         android:id="@+id/image_view"
+        android:contentDescription="@string/diary_image_content_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -17,7 +18,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:padding="@dimen/fullscreen_cancel_button_padding"

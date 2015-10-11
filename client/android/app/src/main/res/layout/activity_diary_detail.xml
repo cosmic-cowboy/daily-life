@@ -17,13 +17,13 @@
         app:layout_column="0"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:background="@color/nav_bar"
         android:theme="@style/AppToolBar"
         app:popupTheme="@style/AppTheme"
         android:elevation="@dimen/toolbar_elevation" />
 
     <ImageView
         android:id="@+id/message_image"
+        android:contentDescription="@string/diary_image_content_description"
         app:layout_row="1"
         app:layout_column="0"
         android:gravity="center"

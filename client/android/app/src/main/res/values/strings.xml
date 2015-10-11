@@ -1,14 +1,35 @@
 <resources>
+
+
+    <!--================================================================
+    共通・タイトル
+        ================================================================-->
+
     <string name="app_name">Daily-life</string>
     <string name="diary_list">日記一覧</string>
     <string name="action_new_diary">日記作成</string>
     <string name="action_edit_diary">日記編集</string>
+
+    <!--================================================================
+    ボタン・設定
+        ================================================================-->
+
     <string name="action_settings">設定</string>
     <string name="button_camera">カメラ</string>
     <string name="button_calendar">カレンダー</string>
     <string name="button_save">保存</string>
     <string name="button_delete">削除</string>
-    <string name="new_diary_edit_text_hint">新しい日記を作成する</string>
+
+    <!--================================================================
+        ヒント・説明
+        ================================================================-->
+
+    <string name="new_diary_edit_text_hint">今日はどんな１日でしたか？</string>
+    <string name="diary_image_content_description">日記に登録された画像です</string>
+
+    <!--================================================================
+        アラート
+        ================================================================-->
 
     <string name="ok">はい</string>
     <string name="cancel">いいえ</string>

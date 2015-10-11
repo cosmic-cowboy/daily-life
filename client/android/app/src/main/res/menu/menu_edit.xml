@@ -6,8 +6,10 @@
     <item android:id="@+id/open_image_dialog"
         android:title="@string/button_camera"
         android:icon="@android:drawable/ic_menu_camera"
-        android:orderInCategory="100" app:showAsAction="always" />
+        app:showAsAction="ifRoom"
+        />
     <item android:id="@+id/post_newDiary"
         android:title="@string/button_save"
-        android:orderInCategory="100" app:showAsAction="always" />
+        app:showAsAction="always"
+        />
 </menu>

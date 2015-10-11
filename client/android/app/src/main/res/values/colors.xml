@@ -1,12 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="nav_bar">#009688</color>
+
+    <!--================================================================
+        Material Design を元にした基本色
+
+        https://www.google.com/design/spec/style/color.html#color-color-palette
+        ================================================================-->
+    <color name="material_teal_500">#009688</color>
+
+    <!--================================================================
+        ツールバー及びコンポーネントの共通色
+        ================================================================-->
+
+    <color name="nav_bar">@color/material_teal_500</color>
     <color name="primary">#E8E8E8</color>
     <color name="status_bar">#66000000</color>
-    <color name="accent">#ffffff</color>
+    <color name="fab_btn">@color/material_teal_500</color>
 
-    <color name="text_dark">#616161</color>
-    <color name="text_light">#9E9E9E</color>
-    <color name="edit_background">#ffffff</color>
+    <!--================================================================
+        テキスト
+        ================================================================-->
+
+    <color name="text_title">@color/material_teal_500</color>
+
+
+    <!--================================================================
+        その他・特定用途用の色
+        ================================================================-->
+
+    <color name="edit_background">@android:color/white</color>
 
 </resources>

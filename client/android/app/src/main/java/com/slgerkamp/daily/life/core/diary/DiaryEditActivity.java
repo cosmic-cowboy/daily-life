@@ -137,6 +137,12 @@ public class DiaryEditActivity extends AppCompatActivity {
     }
 
     private void setUpImage(JSONData json){
+
+        int displaySize = getResources().getDimensionPixelSize(R.dimen.list_image_size);
+        imageView.getLayoutParams().height = displaySize;
+        int paddingSize = getResources().getDimensionPixelSize(R.dimen.list_image_padding_size);
+        imageView.setPadding(paddingSize, paddingSize, paddingSize, paddingSize);
+
         json.getLong("fileId").subscribe(
                 new Action1<Long>() {
                     @Override

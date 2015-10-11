@@ -6,5 +6,6 @@
     <item android:id="@+id/open_calendar_dialog"
         android:title="@string/button_calendar"
         android:icon="@android:drawable/ic_menu_today"
-        android:orderInCategory="100" app:showAsAction="always" />
+        app:showAsAction="always"
+        />
 </menu>
