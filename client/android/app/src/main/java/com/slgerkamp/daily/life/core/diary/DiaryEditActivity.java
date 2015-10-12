@@ -1,6 +1,8 @@
 package com.slgerkamp.daily.life.core.diary;
 
 
+import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -31,21 +33,49 @@ import rx.functions.Func1;
 
 public class DiaryEditActivity extends AppCompatActivity {
 
+    private static final String PARAM_POST_DATE = "postDate";
+    public static final int CALL_DIARY_EDIT_ACTIVITY_REQUEST_CODE = 123;
+
     @InjectView(R.id.message_image) ImageView imageView;
     @InjectView(R.id.message_input) EditText editText;
     Optional<Long> optFileId;
     PostDate postDate;
 
+    /**
+     * <p>日記編集画面を開きます。</p>
+     */
+    public static void openFromFragment(Activity activity, Fragment fragment) {
+        Intent intent = new Intent(activity, DiaryEditActivity.class);
+        fragment.startActivityForResult(intent, CALL_DIARY_EDIT_ACTIVITY_REQUEST_CODE);
+    }
+
+
+    /**
+     * <p>日記編集画面を開きます。</p>
+     */
+    public static void openFromFragmentUsingPostDate(Activity activity, Fragment fragment, PostDate postDate) {
+        Intent intent = new Intent(activity, DiaryEditActivity.class);
+        intent.putExtra(PARAM_POST_DATE, postDate);
+        fragment.startActivityForResult(intent, CALL_DIARY_EDIT_ACTIVITY_REQUEST_CODE);
+    }
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         optFileId = Optional.absent();
-        postDate = PostDate.of(new Date());
         setContentView(R.layout.activity_diary_edit);
         ButterKnife.inject(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
+
+        postDate = PostDate.of(new Date());
+
+        if (getIntent().getSerializableExtra(PARAM_POST_DATE) != null) {
+            postDate = (PostDate)getIntent().getSerializableExtra(PARAM_POST_DATE);
+        }
         getSupportActionBar().setTitle(Utils.localDate(this, postDate.value));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

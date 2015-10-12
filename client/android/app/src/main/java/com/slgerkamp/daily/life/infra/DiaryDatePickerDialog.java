@@ -13,6 +13,7 @@ import com.slgerkamp.daily.life.core.diary.PostDate;
 import com.slgerkamp.daily.life.generic.Backend;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -36,6 +37,9 @@ public class DiaryDatePickerDialog extends DatePickerDialog {
      */
     private static final int DAIRY_LIFE_MIN_YEAR = 2015;
 
+    private OnDiaryDatePickerClickListener diaryDatePickerCallBack;
+
+    public DiaryDatePickerDialog() {}
     /**
      * <p>
      *     インスタンス化を行う。
@@ -43,15 +47,22 @@ public class DiaryDatePickerDialog extends DatePickerDialog {
      *     ・カレンダーの表示領域設定
      *     ・タップの有効領域設定
      * </p>
-     * @param callBack
+     * @param diaryDatePickerCallBack
      * @param year
      * @param monthOfYear
      * @param dayOfMonth
      * @return
      */
-    public static DiaryDatePickerDialog newInstance(DatePickerDialog.OnDateSetListener callBack, int year, int monthOfYear, int dayOfMonth) {
+    public static DiaryDatePickerDialog newInstance(OnDiaryDatePickerClickListener diaryDatePickerCallBack, int year, int monthOfYear, int dayOfMonth
+            ) {
         DiaryDatePickerDialog ret = new DiaryDatePickerDialog();
-        ret.initialize(callBack, year, monthOfYear, dayOfMonth);
+        ret.initialize(
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {}
+                },
+                year, monthOfYear, dayOfMonth);
+        ret.diaryDatePickerCallBack = diaryDatePickerCallBack;
 
         // カレンダーのタップの有効領域設定
         Calendar calendar = Calendar.getInstance();
@@ -87,6 +98,28 @@ public class DiaryDatePickerDialog extends DatePickerDialog {
     @Override
     public void onDayOfMonthSelected(int year, int month, int day) {
         super.onDayOfMonthSelected(year, month, day);
+
+        final Calendar cal = Calendar.getInstance();
+        cal.set(year, month, day);
+
+        List<Calendar> highlightedDays = Arrays.asList(getHighlightedDays());
+        Calendar nullableCalendar =
+                Observable.from(highlightedDays).filter(new Func1<Calendar, Boolean>() {
+                    @Override
+                    public Boolean call(Calendar calendar) {
+                        return
+                                calendar.get(Calendar.YEAR) == cal.get(Calendar.YEAR)
+                                        && calendar.get(Calendar.MONTH) == cal.get(Calendar.MONTH)
+                                        && calendar.get(Calendar.DATE) == cal.get(Calendar.DATE);
+                    }
+                }).firstOrDefault(null).toBlocking().first();
+
+        if (nullableCalendar != null){
+            diaryDatePickerCallBack.onHighlightedDayOfMonthSelected(year, month, day);
+        } else {
+            diaryDatePickerCallBack.onNotHighlightedDayOfMonthSelected(year, month, day);
+        }
+
         tryVibrate();
         if(getDialog() != null) getDialog().cancel();
     }

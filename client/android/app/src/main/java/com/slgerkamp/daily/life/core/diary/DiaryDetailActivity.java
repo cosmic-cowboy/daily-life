@@ -1,8 +1,11 @@
 package com.slgerkamp.daily.life.core.diary;
 
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -33,9 +36,31 @@ import rx.functions.Func1;
  */
 public class DiaryDetailActivity extends AppCompatActivity {
 
+    private static final String PARAM_DIARY_ID  = "diaryId";
+    private static final String PARAM_POST_DATE = "postDate";
+    public static final int CALL_DIARY_DETAIL_ACTIVITY_REQUEST_CODE = 124;
+
     @InjectView(R.id.message_image) ImageView imageView;
     @InjectView(R.id.message_content) TextView textView;
     private DiaryId diaryId;
+
+    /**
+     * <p>日記編集画面を開きます。</p>
+     */
+    public static void openFromFragment(Activity activity, Fragment fragment, DiaryId diaryId) {
+        Intent intent = new Intent(activity, DiaryDetailActivity.class);
+        intent.putExtra(PARAM_DIARY_ID, diaryId);
+        fragment.startActivityForResult(intent, CALL_DIARY_DETAIL_ACTIVITY_REQUEST_CODE);
+    }
+
+    /**
+     * <p>日記編集画面を開きます。</p>
+     */
+    public static void openFromFragment(Activity activity, Fragment fragment, PostDate postDate) {
+        Intent intent = new Intent(activity, DiaryDetailActivity.class);
+        intent.putExtra(PARAM_POST_DATE, postDate);
+        fragment.startActivityForResult(intent, CALL_DIARY_DETAIL_ACTIVITY_REQUEST_CODE);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +72,14 @@ public class DiaryDetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        diaryId = (DiaryId) getIntent().getSerializableExtra("diaryId");
-        getEntry(diaryId);
+        if (getIntent().getSerializableExtra(PARAM_DIARY_ID) != null){
+            diaryId = (DiaryId) getIntent().getSerializableExtra(PARAM_DIARY_ID);
+            getEntry(diaryId);
+        };
+        if (getIntent().getSerializableExtra(PARAM_POST_DATE) != null){
+            PostDate postDate = (PostDate)getIntent().getSerializableExtra(PARAM_POST_DATE);
+            getEntry(postDate);
+        };
     }
 
 
@@ -103,7 +134,7 @@ public class DiaryDetailActivity extends AppCompatActivity {
                                             public void call(JSONData jsonData) {
                                                 new AlertDialog.Builder(DiaryDetailActivity.this)
                                                         .setMessage(getString(R.string.notify_delete))
-                                                        .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener(){
+                                                        .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                                                             @Override
                                                             public void onClick(DialogInterface dialog, int which) {
                                                                 finish();
@@ -130,13 +161,35 @@ public class DiaryDetailActivity extends AppCompatActivity {
     }
 
     /**
+     * <p>指定された日記の日付から日記情報を取得し、タイトル、日記内容をViewに配置する</p>
+     * @param postDate
+     */
+    private void getEntry(PostDate postDate) {
+        Observable<JSONData> observableJSONDate = new Backend(this).get("entry")
+                .param("postDate", postDate.getString())
+                .toObservable();
+
+        setEntry(observableJSONDate);
+    }
+    /**
      * <p>指定された日記IDから日記情報を取得し、タイトル、日記内容をViewに配置する</p>
      * @param diaryId
      */
     private void getEntry(DiaryId diaryId) {
-        new Backend(this).get("entry")
+        Observable<JSONData> observableJSONDate = new Backend(this).get("entry")
                 .param("entryId", Long.toString(diaryId.value))
-                .toObservable()
+                .toObservable();
+
+        setEntry(observableJSONDate);
+    }
+
+    /**
+     * <p>日記一覧リクエストのレスポンスから描画を担当する。</p>
+     * @param observableJSONDate
+     */
+    private void setEntry(Observable<JSONData> observableJSONDate) {
+
+        observableJSONDate
                 .flatMap(new Func1<JSONData, Observable<List<JSONData>>>() {
                     @Override
                     public Observable<List<JSONData>> call(JSONData json) {

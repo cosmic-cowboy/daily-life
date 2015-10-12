@@ -53,12 +53,18 @@ public class EntryController {
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.GET)
-	public Map<String, Object> entryList(@RequestParam(value = "entryId", required = false) Long entryId) {
+	public Map<String, Object> entryList(
+			@RequestParam(value = "entryId", required = false) Long entryId,
+			@RequestParam(value = "postDate", required = false) Long postDate) {
 		Optional<EntryId> optEntryId = Optional.empty();
+		Optional<Long> optDateTime = Optional.empty();
 		if (entryId != null) {
 			optEntryId = Optional.of(new EntryId(entryId));
 		}
-		return getEntryList(optEntryId);
+		if (postDate != null) {
+			optDateTime = Optional.of(postDate);
+		}
+		return getEntryList(optEntryId, optDateTime);
 	}
 
 	/**
@@ -112,26 +118,18 @@ public class EntryController {
 				.build();
 	}
 
-	/**
-	 * <p>画像を削除する。
-	 * @param entry
-	 */
-	@RequestMapping(value = "/image", method = RequestMethod.DELETE)
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void deleteImage(@RequestParam Long fileId) {
-
-	}
-
-
 	// ----------------------------------------------------------------
 	//     ヘルパーメソッド
 	// ----------------------------------------------------------------
 	/**
 	 * <p>日記のエントリを取得する。</p>
 	 * @param optEntryId
+	 * @param optPostDate
 	 * @return
 	 */
-	private Map<String, Object> getEntryList(Optional<EntryId> optEntryId) {
+	private Map<String, Object> getEntryList(
+			Optional<EntryId> optEntryId,
+			Optional<Long> optPostDate) {
 		BiFunction<FileRelation, EntryQuery, JsonProjection> function =
 				((fileRelation, query) -> new JsonProjection()
 					.put("entryId", query.entryId())
@@ -139,7 +137,7 @@ public class EntryController {
 					.put("content", query.content())
 					.put("fileId", fileRelation.fileId)
 				);
-		return getEntryList(optEntryId, function);
+		return getEntryList(optEntryId, optPostDate, function);
 	}
 
 	/**
@@ -151,12 +149,13 @@ public class EntryController {
 				((fileRelation, query) -> new JsonProjection()
 					.put("postDate", query.postDate())
 				);
-		return getEntryList(Optional.empty(), function);
+		return getEntryList(Optional.empty(), Optional.empty(), function);
 
 	}
 
 	private Map<String, Object> getEntryList(
 			Optional<EntryId> optEntryId,
+			Optional<Long> optPostDate,
 			BiFunction<FileRelation, EntryQuery, JsonProjection> function) {
 
 		final FileRelation fileRelation = new FileRelation();
@@ -165,6 +164,7 @@ public class EntryController {
 		query.orderByPostDateDesc();
 
 		optEntryId.ifPresent(entryId -> query.entryId(entryId));
+		optPostDate.ifPresent(postDate -> query.postDate(postDate));
 
 		List<Map<String, Object>> list =
 				query.select().list(function.apply(fileRelation, query));

@@ -21,9 +21,10 @@ import com.slgerkamp.daily.life.R;
 import com.slgerkamp.daily.life.generic.Backend;
 import com.slgerkamp.daily.life.infra.DiaryDatePickerDialog;
 import com.slgerkamp.daily.life.infra.JSONData;
-import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+import com.slgerkamp.daily.life.infra.OnDiaryDatePickerClickListener;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +38,7 @@ import rx.functions.Func1;
 /**
  * <p>日記の一覧画面を管理するクラスです。
  */
-public class DiaryFragment extends Fragment implements AbsListView.OnItemClickListener, DatePickerDialog.OnDateSetListener{
+public class DiaryFragment extends Fragment implements AbsListView.OnItemClickListener{
 
     @InjectView(android.R.id.list) AbsListView listView;
     @InjectView(R.id.first_fab) FloatingActionButton fab;
@@ -46,9 +47,6 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
 
     // TODO リストが他にできたら汎用的なEntityListをつくる
     private Map<Integer, DiaryItem> entityMap;
-
-    private static final int CALL_DIARY_EDIT_ACTIVITY_REQUEST_CODE = 123;
-    private static final int CALL_DIARY_DETAIL_ACTIVITY_REQUEST_CODE = 124;
 
     public DiaryFragment() {
         entityMap = new HashMap<>();
@@ -87,12 +85,28 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
             case R.id.open_calendar_dialog:
                 Calendar now = Calendar.getInstance();
                 DiaryDatePickerDialog dpd = DiaryDatePickerDialog.newInstance(
-                        this,
+                        new OnDiaryDatePickerClickListener() {
+                            @Override
+                            public void onHighlightedDayOfMonthSelected(int year, int month, int day) {
+                                Calendar cal = Calendar.getInstance();
+                                cal.set(year, month, day);
+                                PostDate postDate = PostDate.of(new Date(cal.getTimeInMillis()));
+                                DiaryDetailActivity.openFromFragment(getActivity(), DiaryFragment.this, postDate);
+                            }
+
+                            @Override
+                            public void onNotHighlightedDayOfMonthSelected(int year, int month, int day) {
+                                Calendar cal = Calendar.getInstance();
+                                cal.set(year, month, day);
+                                PostDate postDate = PostDate.of(new Date(cal.getTimeInMillis()));
+                                DiaryEditActivity.openFromFragmentUsingPostDate(getActivity(), DiaryFragment.this, postDate);
+                            }
+                        },
                         now.get(Calendar.YEAR),
                         now.get(Calendar.MONTH),
                         now.get(Calendar.DAY_OF_MONTH)
                 );
-                dpd.show(getFragmentManager(), "Datepickerdialog");
+                dpd.show(getFragmentManager(), "DiaryDatePickerDialog");
                 return true;
         }
 
@@ -106,26 +120,24 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Intent intent = new Intent(getActivity(), DiaryEditActivity.class);
-                startActivityForResult(intent, CALL_DIARY_EDIT_ACTIVITY_REQUEST_CODE);
+                DiaryEditActivity.openFromFragment(getActivity(), DiaryFragment.this);
             }
         });
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case CALL_DIARY_EDIT_ACTIVITY_REQUEST_CODE:
+            case DiaryEditActivity.CALL_DIARY_EDIT_ACTIVITY_REQUEST_CODE:
                 getEntry();
                 break;
-            case CALL_DIARY_DETAIL_ACTIVITY_REQUEST_CODE:
+            case DiaryDetailActivity.CALL_DIARY_DETAIL_ACTIVITY_REQUEST_CODE:
                 getEntry();
                 break;
             default:
                 break;
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
 
@@ -134,27 +146,8 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
         Activity activity = getActivity();
         Object item = entityMap.get(position);
         if (item instanceof DiaryItem) {
-            Intent intent = new Intent(getActivity(), DiaryDetailActivity.class);
-            intent.putExtra("diaryId", ((DiaryItem) item).diaryId);
-            startActivityForResult(intent, CALL_DIARY_DETAIL_ACTIVITY_REQUEST_CODE);
+            DiaryDetailActivity.openFromFragment(getActivity(), this, ((DiaryItem) item).diaryId);
         }
-    }
-
-    /**
-     * <p>
-     *     wdullaer/MaterialDateTimePicker
-     *     https://github.com/wdullaer/MaterialDateTimePicker
-     * </p>
-     *
-     * @param datePickerDialog
-     * @param year
-     * @param monthOfYear
-     * @param dayOfMonth
-     */
-    @Override
-    public void onDateSet(DatePickerDialog datePickerDialog, int year, int monthOfYear, int dayOfMonth) {
-//        String date = "You picked the following date: "+dayOfMonth+"/"+(monthOfYear+1)+"/"+year;
-//        dateTextView.setText(date);
     }
 
 
