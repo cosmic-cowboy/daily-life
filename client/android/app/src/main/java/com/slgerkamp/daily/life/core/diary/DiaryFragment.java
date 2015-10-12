@@ -118,17 +118,13 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case CALL_DIARY_EDIT_ACTIVITY_REQUEST_CODE:
-                if (resultCode == Activity.RESULT_OK) {
-                    getEntry();
-                }
-            break;
-            case CALL_DIARY_DETAIL_ACTIVITY_REQUEST_CODE:
-                if (resultCode == Activity.RESULT_OK) {
-                    getEntry();
-                }
+                getEntry();
                 break;
-        default:
-            break;
+            case CALL_DIARY_DETAIL_ACTIVITY_REQUEST_CODE:
+                getEntry();
+                break;
+            default:
+                break;
         }
     }
 
@@ -223,7 +219,6 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
                 .subscribe(new Action1<List<DiaryItem>>() {
                     @Override
                     public void call(List<DiaryItem> diaryItems) {
-
                         for(int i = 0; i <  diaryItems.size(); i++){
                             Log.d("JSON:", diaryItems.get(i).toString());
                             entityMap.put(i, diaryItems.get(i));
