@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -16,8 +19,12 @@ import android.widget.BaseAdapter;
 import com.google.common.collect.ImmutableList;
 import com.slgerkamp.daily.life.R;
 import com.slgerkamp.daily.life.generic.Backend;
+import com.slgerkamp.daily.life.infra.DiaryDatePickerDialog;
 import com.slgerkamp.daily.life.infra.JSONData;
+import com.slgerkamp.daily.life.infra.OnDiaryDatePickerClickListener;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,9 +48,6 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
     // TODO リストが他にできたら汎用的なEntityListをつくる
     private Map<Integer, DiaryItem> entityMap;
 
-    private static final int CALL_DIARY_EDIT_ACTIVITY_REQUEST_CODE = 123;
-    private static final int CALL_DIARY_DETAIL_ACTIVITY_REQUEST_CODE = 124;
-
     public DiaryFragment() {
         entityMap = new HashMap<>();
     };
@@ -59,6 +63,7 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.diary_fragment, container, false);
+        setHasOptionsMenu(true);
 
         ButterKnife.inject(this, view);
 
@@ -69,36 +74,70 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_diary, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.open_calendar_dialog:
+                Calendar now = Calendar.getInstance();
+                DiaryDatePickerDialog dpd = DiaryDatePickerDialog.newInstance(
+                        new OnDiaryDatePickerClickListener() {
+                            @Override
+                            public void onHighlightedDayOfMonthSelected(int year, int month, int day) {
+                                Calendar cal = Calendar.getInstance();
+                                cal.set(year, month, day);
+                                PostDate postDate = PostDate.of(new Date(cal.getTimeInMillis()));
+                                DiaryDetailActivity.openFromFragment(getActivity(), DiaryFragment.this, postDate);
+                            }
+
+                            @Override
+                            public void onNotHighlightedDayOfMonthSelected(int year, int month, int day) {
+                                Calendar cal = Calendar.getInstance();
+                                cal.set(year, month, day);
+                                PostDate postDate = PostDate.of(new Date(cal.getTimeInMillis()));
+                                DiaryEditActivity.openFromFragmentUsingPostDate(getActivity(), DiaryFragment.this, postDate);
+                            }
+                        },
+                        now.get(Calendar.YEAR),
+                        now.get(Calendar.MONTH),
+                        now.get(Calendar.DAY_OF_MONTH)
+                );
+                dpd.show(getFragmentManager(), "DiaryDatePickerDialog");
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Intent intent = new Intent(getActivity(), DiaryEditActivity.class);
-                startActivityForResult(intent, CALL_DIARY_EDIT_ACTIVITY_REQUEST_CODE);
+                DiaryEditActivity.openFromFragment(getActivity(), DiaryFragment.this);
             }
         });
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case CALL_DIARY_EDIT_ACTIVITY_REQUEST_CODE:
-                if (resultCode == Activity.RESULT_OK) {
-                    getEntry();
-                }
-            break;
-            case CALL_DIARY_DETAIL_ACTIVITY_REQUEST_CODE:
-                if (resultCode == Activity.RESULT_OK) {
-                    getEntry();
-                }
+            case DiaryEditActivity.CALL_DIARY_EDIT_ACTIVITY_REQUEST_CODE:
+                getEntry();
                 break;
-        default:
-            break;
+            case DiaryDetailActivity.CALL_DIARY_DETAIL_ACTIVITY_REQUEST_CODE:
+                getEntry();
+                break;
+            default:
+                break;
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
 
@@ -107,9 +146,7 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
         Activity activity = getActivity();
         Object item = entityMap.get(position);
         if (item instanceof DiaryItem) {
-            Intent intent = new Intent(getActivity(), DiaryDetailActivity.class);
-            intent.putExtra("diaryId", ((DiaryItem) item).diaryId);
-            startActivityForResult(intent, CALL_DIARY_DETAIL_ACTIVITY_REQUEST_CODE);
+            DiaryDetailActivity.openFromFragment(getActivity(), this, ((DiaryItem) item).diaryId);
         }
     }
 
@@ -175,7 +212,6 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
                 .subscribe(new Action1<List<DiaryItem>>() {
                     @Override
                     public void call(List<DiaryItem> diaryItems) {
-
                         for(int i = 0; i <  diaryItems.size(); i++){
                             Log.d("JSON:", diaryItems.get(i).toString());
                             entityMap.put(i, diaryItems.get(i));

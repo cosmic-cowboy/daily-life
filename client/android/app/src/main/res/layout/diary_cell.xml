@@ -13,11 +13,12 @@
         app:layout_row="0"
         app:layout_gravity="fill_horizontal"
         android:layout_marginTop="@dimen/list_view_standard_margin"
-        android:layout_marginLeft="@dimen/list_view_standard_margin"
+        android:layout_marginStart="@dimen/list_view_standard_margin"
         android:layout_width="@dimen/list_text_default_size"
+        android:textColor="@color/text_title"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="0:00"/>
+        />
 
     <TextView
         android:id="@+id/content"
@@ -26,17 +27,18 @@
         app:layout_columnWeight="1"
         app:layout_gravity="fill_horizontal"
         android:layout_marginTop="@dimen/list_view_small_margin"
-        android:layout_marginLeft="@dimen/list_view_standard_margin"
+        android:layout_marginStart="@dimen/list_view_standard_margin"
+        android:layout_marginBottom="@dimen/list_view_standard_margin"
         android:layout_width="@dimen/list_text_default_size"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="status"
         android:ellipsize="end"
         android:maxLines="2"
         />
 
     <ImageView
         android:id="@+id/picture"
+        android:contentDescription="@string/diary_image_content_description"
         app:layout_column="1"
         app:layout_row="0"
         app:layout_rowSpan="2"

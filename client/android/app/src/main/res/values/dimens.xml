@@ -1,9 +1,21 @@
 <resources>
 
+    <!--================================================================
+    共通
+    ================================================================-->
+
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
     <dimen name="toolbar_elevation">4dp</dimen>
+
+    <dimen name="floating_button_margin">16dp</dimen>
+
+    <dimen name="fullscreen_cancel_button_padding">16dp</dimen>
+
+    <!--================================================================
+        日記のリスト表示
+        ================================================================-->
 
     <dimen name="list_view_standard_margin">8dp</dimen>
     <dimen name="list_view_small_margin">4dp</dimen>
@@ -15,8 +27,11 @@
     <dimen name="list_text_default_size">0dp</dimen>
     <dimen name="detail_text_margin">10dp</dimen>
 
-    <dimen name="floating_button_margin">16dp</dimen>
+    <!--================================================================
+        編集画面
+        ================================================================-->
 
-    <dimen name="fullscreen_cancel_button_padding">16dp</dimen>
-
+    <dimen name="edit_text_width_padding">10dp</dimen>
+    <dimen name="edit_text_height_padding">20dp</dimen>
+    
 </resources>

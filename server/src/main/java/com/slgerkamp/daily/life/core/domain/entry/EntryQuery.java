@@ -70,6 +70,10 @@ public final class EntryQuery {
 		query.where(entry.entryId.eq(entryId.longValue()));
 		return this;
 	}
+	public EntryQuery postDate(Long postDate) {
+		query.where(entry.postDate.eq(postDate));
+		return this;
+	}
 
 	// ----------------------------------------------------------------
 	//     フィルタ　Fileテーブル

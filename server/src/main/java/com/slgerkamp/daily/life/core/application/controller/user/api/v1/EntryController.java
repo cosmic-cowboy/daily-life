@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiFunction;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,16 +53,32 @@ public class EntryController {
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.GET)
-	public Map<String, Object> entryList(@RequestParam(value = "entryId", required = false) Long entryId) {
-
+	public Map<String, Object> entryList(
+			@RequestParam(value = "entryId", required = false) Long entryId,
+			@RequestParam(value = "postDate", required = false) Long postDate) {
 		Optional<EntryId> optEntryId = Optional.empty();
+		Optional<Long> optDateTime = Optional.empty();
 		if (entryId != null) {
 			optEntryId = Optional.of(new EntryId(entryId));
 		}
-		return getEntryList(optEntryId);
+		if (postDate != null) {
+			optDateTime = Optional.of(postDate);
+		}
+		return getEntryList(optEntryId, optDateTime);
 	}
 
+	/**
+	 * <p>すべての日記の投稿日を取得する。
+	 * @return
+	 */
+	@RequestMapping(value = "/postdate", method = RequestMethod.GET)
+	public Map<String, Object> entryPostDateList() {
+		return getEntryPostDateList();
+	}
 
+	// ----------------------------------------------------------------
+	//     副作用のあるリクエスト
+	// ----------------------------------------------------------------
 	/**
 	 * <p>日記を投稿する。
 	 * @param entryForm
@@ -83,7 +100,6 @@ public class EntryController {
 	@RequestMapping(method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void delete(@RequestParam Long entryId) {
-
 		entryRepositoryFactory.create().delete(new EntryId(entryId));
 	}
 
@@ -102,37 +118,56 @@ public class EntryController {
 				.build();
 	}
 
-	/**
-	 * <p>画像を削除する。
-	 * @param entry
-	 */
-	@RequestMapping(value = "/image", method = RequestMethod.DELETE)
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void deleteImage(@RequestParam Long fileId) {
-
-	}
-
-
 	// ----------------------------------------------------------------
 	//     ヘルパーメソッド
 	// ----------------------------------------------------------------
-	// 日記のエントリを取得する
-	private Map<String, Object> getEntryList(Optional<EntryId> optEntryId) {
+	/**
+	 * <p>日記のエントリを取得する。</p>
+	 * @param optEntryId
+	 * @param optPostDate
+	 * @return
+	 */
+	private Map<String, Object> getEntryList(
+			Optional<EntryId> optEntryId,
+			Optional<Long> optPostDate) {
+		BiFunction<FileRelation, EntryQuery, JsonProjection> function =
+				((fileRelation, query) -> new JsonProjection()
+					.put("entryId", query.entryId())
+					.put("postDate", query.postDate())
+					.put("content", query.content())
+					.put("fileId", fileRelation.fileId)
+				);
+		return getEntryList(optEntryId, optPostDate, function);
+	}
+
+	/**
+	 * <p>日記の投稿日を取得する。</p>
+	 * @return
+	 */
+	private Map<String, Object> getEntryPostDateList() {
+		BiFunction<FileRelation, EntryQuery, JsonProjection> function =
+				((fileRelation, query) -> new JsonProjection()
+					.put("postDate", query.postDate())
+				);
+		return getEntryList(Optional.empty(), Optional.empty(), function);
+
+	}
+
+	private Map<String, Object> getEntryList(
+			Optional<EntryId> optEntryId,
+			Optional<Long> optPostDate,
+			BiFunction<FileRelation, EntryQuery, JsonProjection> function) {
+
 		final FileRelation fileRelation = new FileRelation();
 		final EntryQuery query = entryFactory.create();
 		query.joinFile(fileRelation);
 		query.orderByPostDateDesc();
 
 		optEntryId.ifPresent(entryId -> query.entryId(entryId));
+		optPostDate.ifPresent(postDate -> query.postDate(postDate));
 
 		List<Map<String, Object>> list =
-				query.select().list(
-						new JsonProjection()
-							.put("entryId", query.entryId())
-							.put("postDate", query.postDate())
-							.put("content", query.content())
-							.put("fileId", fileRelation.fileId)
-				);
+				query.select().list(function.apply(fileRelation, query));
 		return new ImmutableMap.Builder<String, Object>()
 				.put("entryList", list)
 				.build();

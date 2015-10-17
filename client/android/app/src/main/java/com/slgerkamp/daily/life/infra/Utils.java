@@ -14,7 +14,8 @@ public class Utils {
 
     // ロケールに合わせた日付表示
     public static String localDate(Context context, Date date){
-        return DateFormat.getLongDateFormat(context).format(date);
+        String dayOfTheWeek = (String)DateFormat.format("EEEE", date);
+        return DateFormat.getLongDateFormat(context).format(date) + " " + dayOfTheWeek;
     }
 
 }
