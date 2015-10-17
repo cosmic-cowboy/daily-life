@@ -120,4 +120,10 @@
 
 にアクセスし、driverClassName, url, username, passwordを入力
 
+### Herokuへのデプロイ
+
+[Heroku への デプロイ手順](server/deploy.md)
+
+### 今後のロードマップ
+
 [計画書](PLAN.md)
