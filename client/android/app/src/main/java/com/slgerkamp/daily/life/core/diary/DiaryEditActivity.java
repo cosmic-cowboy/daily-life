@@ -44,15 +44,6 @@ public class DiaryEditActivity extends AppCompatActivity {
     /**
      * <p>日記編集画面を開きます。</p>
      */
-    public static void openFromFragment(Activity activity, Fragment fragment) {
-        Intent intent = new Intent(activity, DiaryEditActivity.class);
-        fragment.startActivityForResult(intent, CALL_DIARY_EDIT_ACTIVITY_REQUEST_CODE);
-    }
-
-
-    /**
-     * <p>日記編集画面を開きます。</p>
-     */
     public static void openFromFragmentUsingPostDate(Activity activity, Fragment fragment, PostDate postDate) {
         Intent intent = new Intent(activity, DiaryEditActivity.class);
         intent.putExtra(PARAM_POST_DATE, postDate);
@@ -71,11 +62,8 @@ public class DiaryEditActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
-        postDate = PostDate.of(new Date());
+        postDate = (PostDate)getIntent().getSerializableExtra(PARAM_POST_DATE);
 
-        if (getIntent().getSerializableExtra(PARAM_POST_DATE) != null) {
-            postDate = (PostDate)getIntent().getSerializableExtra(PARAM_POST_DATE);
-        }
         getSupportActionBar().setTitle(Utils.localDate(this, postDate.value));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

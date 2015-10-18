@@ -1,6 +1,7 @@
 package com.slgerkamp.daily.life.core.diary;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import com.slgerkamp.daily.life.generic.Backend;
 import com.slgerkamp.daily.life.infra.DiaryDatePickerDialog;
 import com.slgerkamp.daily.life.infra.JSONData;
 import com.slgerkamp.daily.life.infra.OnDiaryDatePickerClickListener;
+import com.slgerkamp.daily.life.infra.Utils;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -46,7 +48,6 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
 
     private DiaryAdapter diaryAdapter;
 
-    // TODO リストが他にできたら汎用的なEntityListをつくる
     private Map<Integer, DiaryItem> entityMap;
     private Optional<List<Calendar>> optPostDateCalendar = Optional.absent();
 
@@ -122,7 +123,19 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DiaryEditActivity.openFromFragment(getActivity(), DiaryFragment.this);
+
+                if (optPostDateCalendar.isPresent()) {
+                    boolean hasDate = Utils.hasDate(optPostDateCalendar.get(), PostDate.of(new Date()));
+                    if (hasDate) {
+                        new AlertDialog.Builder(getActivity())
+                                .setMessage(getString(R.string.notify_already_post))
+                                .setPositiveButton(getString(R.string.ok), null)
+                                .show();
+                        return;
+                    }
+                }
+                PostDate postDate = PostDate.of(new Date());
+                DiaryEditActivity.openFromFragmentUsingPostDate(getActivity(), DiaryFragment.this, postDate);
             }
         });
     }
