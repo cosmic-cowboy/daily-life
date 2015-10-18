@@ -7,6 +7,7 @@ import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -16,6 +17,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
+import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
+import com.github.ksoichiro.android.observablescrollview.ScrollState;
+import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.google.common.collect.ImmutableList;
 import com.slgerkamp.daily.life.R;
 import com.slgerkamp.daily.life.generic.Backend;
@@ -34,18 +39,21 @@ import rx.functions.Func1;
 /**
  * <p>日記の詳細ページ</p>
  */
-public class DiaryDetailActivity extends AppCompatActivity {
+public class DiaryDetailActivity extends AppCompatActivity implements ObservableScrollViewCallbacks {
 
     private static final String PARAM_DIARY_ID  = "diaryId";
     private static final String PARAM_POST_DATE = "postDate";
     public static final int CALL_DIARY_DETAIL_ACTIVITY_REQUEST_CODE = 124;
 
+    private int mParallaxImageHeight;
     @Bind(R.id.message_image) ImageView imageView;
     @Bind(R.id.message_content) TextView textView;
+    @Bind(R.id.toolbar)  Toolbar toolbar;
+    @Bind(R.id.scroll)  ObservableScrollView scrollView;
     private DiaryId diaryId;
 
     /**
-     * <p>日記編集画面を開きます。</p>
+     * <p>日記詳細画面を開きます。</p>
      */
     public static void openFromFragment(Activity activity, Fragment fragment, DiaryId diaryId) {
         Intent intent = new Intent(activity, DiaryDetailActivity.class);
@@ -54,7 +62,7 @@ public class DiaryDetailActivity extends AppCompatActivity {
     }
 
     /**
-     * <p>日記編集画面を開きます。</p>
+     * <p>日記詳細画面を開きます。</p>
      */
     public static void openFromFragment(Activity activity, Fragment fragment, PostDate postDate) {
         Intent intent = new Intent(activity, DiaryDetailActivity.class);
@@ -71,6 +79,7 @@ public class DiaryDetailActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setBackgroundColor(ScrollUtils.getColorWithAlpha(0, ContextCompat.getColor(this, R.color.nav_bar)));
 
         if (getIntent().getSerializableExtra(PARAM_DIARY_ID) != null){
             diaryId = (DiaryId) getIntent().getSerializableExtra(PARAM_DIARY_ID);
@@ -80,6 +89,9 @@ public class DiaryDetailActivity extends AppCompatActivity {
             PostDate postDate = (PostDate)getIntent().getSerializableExtra(PARAM_POST_DATE);
             getEntry(postDate);
         };
+
+        scrollView.setScrollViewCallbacks(this);
+        mParallaxImageHeight = getResources().getDimensionPixelSize(R.dimen.parallax_image_height);
     }
 
 
@@ -154,7 +166,6 @@ public class DiaryDetailActivity extends AppCompatActivity {
 
     /**
      * <p>指定された日記の日付から日記情報を取得し、タイトル、日記内容をViewに配置する</p>
-     * @param postDate
      */
     private void getEntry(PostDate postDate) {
         Observable<JSONData> observableJSONDate = new Backend(this).get("entry")
@@ -165,7 +176,6 @@ public class DiaryDetailActivity extends AppCompatActivity {
     }
     /**
      * <p>指定された日記IDから日記情報を取得し、タイトル、日記内容をViewに配置する</p>
-     * @param diaryId
      */
     private void getEntry(DiaryId diaryId) {
         Observable<JSONData> observableJSONDate = new Backend(this).get("entry")
@@ -177,7 +187,6 @@ public class DiaryDetailActivity extends AppCompatActivity {
 
     /**
      * <p>日記一覧リクエストのレスポンスから描画を担当する。</p>
-     * @param observableJSONDate
      */
     private void setEntry(Observable<JSONData> observableJSONDate) {
 
@@ -219,13 +228,8 @@ public class DiaryDetailActivity extends AppCompatActivity {
 
     /**
      * <p>指定されたファイルIDの画像を取得し、Viewに配置する</p>
-     * @param id
      */
     private void setUpImageId(final Long id) {
-        int displaySize = getResources().getDimensionPixelSize(R.dimen.list_image_size);
-        imageView.getLayoutParams().height = displaySize;
-        int paddingSize = getResources().getDimensionPixelSize(R.dimen.list_image_padding_size);
-        imageView.setPadding(paddingSize, paddingSize, paddingSize, paddingSize);
         new Backend(DiaryDetailActivity.this).imageLoader()
                 .load(id).into(imageView);
 
@@ -240,4 +244,27 @@ public class DiaryDetailActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        onScrollChanged(scrollView.getCurrentScrollY(), false, false);
+    }
+
+    @Override
+    public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
+        int baseColor = ContextCompat.getColor(this, R.color.nav_bar);
+        float alpha = Math.min(1, (float) scrollY / mParallaxImageHeight);
+        toolbar.setBackgroundColor(ScrollUtils.getColorWithAlpha(alpha, baseColor));
+        imageView.setTranslationY(scrollY / 10);
+    }
+
+    @Override
+    public void onDownMotionEvent() {
+
+    }
+
+    @Override
+    public void onUpOrCancelMotionEvent(ScrollState scrollState) {
+
+    }
 }
