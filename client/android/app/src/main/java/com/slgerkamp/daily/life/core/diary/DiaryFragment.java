@@ -86,22 +86,20 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.open_calendar_dialog:
+
+                // カレンダーを表示します。
+                // ハイライトされた日付がタップされた場合は、詳細画面
+                // ハイライトされていない日付がタップされた場合は、新規作成画面
+                // に遷移します。
                 Calendar now = Calendar.getInstance();
                 DiaryDatePickerDialog dpd = DiaryDatePickerDialog.newInstance(
                         new OnDiaryDatePickerClickListener() {
                             @Override
-                            public void onHighlightedDayOfMonthSelected(int year, int month, int day) {
-                                Calendar cal = Calendar.getInstance();
-                                cal.set(year, month, day);
-                                PostDate postDate = PostDate.of(new Date(cal.getTimeInMillis()));
+                            public void onHighlightedDayOfMonthSelected(PostDate postDate) {
                                 DiaryDetailActivity.openFromFragment(getActivity(), DiaryFragment.this, postDate);
                             }
-
                             @Override
-                            public void onNotHighlightedDayOfMonthSelected(int year, int month, int day) {
-                                Calendar cal = Calendar.getInstance();
-                                cal.set(year, month, day);
-                                PostDate postDate = PostDate.of(new Date(cal.getTimeInMillis()));
+                            public void onNotHighlightedDayOfMonthSelected(PostDate postDate) {
                                 DiaryEditActivity.openFromFragmentUsingPostDate(getActivity(), DiaryFragment.this, postDate);
                             }
                         },

@@ -113,7 +113,7 @@ public class DiaryEditActivity extends AppCompatActivity {
                 return true;
             // 保存ボタン
             case R.id.post_newDiary:
-                postEntry(editText.getText().toString(), postDate.getString());
+                postEntry(editText.getText().toString(), postDate);
                 setResult(RESULT_OK);
                 finish();
                 return true;
@@ -123,11 +123,11 @@ public class DiaryEditActivity extends AppCompatActivity {
     }
 
 
-    private void postEntry(String content, String postDate) {
+    private void postEntry(String content, PostDate postDate) {
 
         Backend.Post post = new Backend(this).post("entry")
                 .param("content", content)
-                .param("postDate", postDate);
+                .param("postDate", postDate.getString());
         if (optFileId.isPresent()){
             post.param("fileId", Long.toString(optFileId.get()));
         }
