@@ -1,6 +1,7 @@
 package com.slgerkamp.daily.life.core.diary;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,12 +17,14 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.slgerkamp.daily.life.R;
 import com.slgerkamp.daily.life.generic.Backend;
 import com.slgerkamp.daily.life.infra.DiaryDatePickerDialog;
 import com.slgerkamp.daily.life.infra.JSONData;
 import com.slgerkamp.daily.life.infra.OnDiaryDatePickerClickListener;
+import com.slgerkamp.daily.life.infra.Utils;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -45,8 +48,8 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
 
     private DiaryAdapter diaryAdapter;
 
-    // TODO リストが他にできたら汎用的なEntityListをつくる
     private Map<Integer, DiaryItem> entityMap;
+    private Optional<List<Calendar>> optPostDateCalendar = Optional.absent();
 
     public DiaryFragment() {
         entityMap = new HashMap<>();
@@ -57,6 +60,7 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getEntry();
+        getPostDate();
         diaryAdapter = new DiaryAdapter();
     }
 
@@ -83,28 +87,27 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.open_calendar_dialog:
+
+                // カレンダーを表示します。
+                // ハイライトされた日付がタップされた場合は、詳細画面
+                // ハイライトされていない日付がタップされた場合は、新規作成画面
+                // に遷移します。
                 Calendar now = Calendar.getInstance();
                 DiaryDatePickerDialog dpd = DiaryDatePickerDialog.newInstance(
                         new OnDiaryDatePickerClickListener() {
                             @Override
-                            public void onHighlightedDayOfMonthSelected(int year, int month, int day) {
-                                Calendar cal = Calendar.getInstance();
-                                cal.set(year, month, day);
-                                PostDate postDate = PostDate.of(new Date(cal.getTimeInMillis()));
+                            public void onHighlightedDayOfMonthSelected(PostDate postDate) {
                                 DiaryDetailActivity.openFromFragment(getActivity(), DiaryFragment.this, postDate);
                             }
-
                             @Override
-                            public void onNotHighlightedDayOfMonthSelected(int year, int month, int day) {
-                                Calendar cal = Calendar.getInstance();
-                                cal.set(year, month, day);
-                                PostDate postDate = PostDate.of(new Date(cal.getTimeInMillis()));
+                            public void onNotHighlightedDayOfMonthSelected(PostDate postDate) {
                                 DiaryEditActivity.openFromFragmentUsingPostDate(getActivity(), DiaryFragment.this, postDate);
                             }
                         },
                         now.get(Calendar.YEAR),
                         now.get(Calendar.MONTH),
-                        now.get(Calendar.DAY_OF_MONTH)
+                        now.get(Calendar.DAY_OF_MONTH),
+                        optPostDateCalendar
                 );
                 dpd.show(getFragmentManager(), "DiaryDatePickerDialog");
                 return true;
@@ -120,7 +123,19 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DiaryEditActivity.openFromFragment(getActivity(), DiaryFragment.this);
+
+                if (optPostDateCalendar.isPresent()) {
+                    boolean hasDate = Utils.hasDate(optPostDateCalendar.get(), PostDate.of(new Date()));
+                    if (hasDate) {
+                        new AlertDialog.Builder(getActivity())
+                                .setMessage(getString(R.string.notify_already_post))
+                                .setPositiveButton(getString(R.string.ok), null)
+                                .show();
+                        return;
+                    }
+                }
+                PostDate postDate = PostDate.of(new Date());
+                DiaryEditActivity.openFromFragmentUsingPostDate(getActivity(), DiaryFragment.this, postDate);
             }
         });
     }
@@ -130,9 +145,11 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
         switch (requestCode) {
             case DiaryEditActivity.CALL_DIARY_EDIT_ACTIVITY_REQUEST_CODE:
                 getEntry();
+                getPostDate();
                 break;
             case DiaryDetailActivity.CALL_DIARY_DETAIL_ACTIVITY_REQUEST_CODE:
                 getEntry();
+                getPostDate();
                 break;
             default:
                 break;
@@ -212,6 +229,7 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
                 .subscribe(new Action1<List<DiaryItem>>() {
                     @Override
                     public void call(List<DiaryItem> diaryItems) {
+                        entityMap.clear();
                         for(int i = 0; i <  diaryItems.size(); i++){
                             Log.d("JSON:", diaryItems.get(i).toString());
                             entityMap.put(i, diaryItems.get(i));
@@ -220,4 +238,54 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
                     }
                 });
     }
+
+    /**
+     * <p>日記の投稿日を取得する</p>
+     */
+    private void getPostDate() {
+        new Backend(getActivity()).get("entry/postdate")
+                .toObservable()
+                .flatMap(new Func1<JSONData, Observable<List<JSONData>>>() {
+                    @Override
+                    public Observable<List<JSONData>> call(JSONData json) {
+                        return json.getList("entryList");
+                    }
+                })
+                .map(new Func1<List<JSONData>, List<PostDate>>() {
+                    @Override
+                    public List<PostDate> call(List<JSONData> jsonData) {
+
+                        ImmutableList.Builder<PostDate> builder = new ImmutableList.Builder<>();
+                        for (JSONData d : jsonData) {
+                            PostDate postDate = d.getLong("postDate").flatMap(new Func1<Long, Observable<PostDate>>() {
+                                @Override
+                                public Observable<PostDate> call(Long l) {
+                                    return PostDate.from(l);
+                                }
+                            }).toBlocking().lastOrDefault(null);
+                            if (postDate != null) {
+                                builder.add(postDate);
+                            } else {
+                                Log.e(DiaryFragment.class.getSimpleName(), "invalid data: " + d);
+                            }
+                        }
+                        return builder.build();
+                    }
+                })
+                .subscribe(new Action1<List<PostDate>>() {
+                    @Override
+                    public void call(List<PostDate> postDates) {
+                        List<Calendar> postDateCalendar = Observable.from(postDates)
+                                .map(new Func1<PostDate, Calendar>() {
+                                    @Override
+                                    public Calendar call(PostDate postDate) {
+                                        return postDate.toCalendar();
+                                    }
+                                })
+                                .toList().toBlocking().single();
+                        optPostDateCalendar = Optional.of(postDateCalendar);
+                    }
+                });
+    }
+
 }

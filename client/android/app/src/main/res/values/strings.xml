@@ -35,9 +35,9 @@
     <string name="cancel">いいえ</string>
 
     <string name="confirm_delete">日記を削除してよろしいですか</string>
-    <string name="notify_delete">日記を削除しました</string>
     <string name="notify_not_delete">日記を削除することができませんでした</string>
     <string name="notify_save">日記を登録しました</string>
     <string name="notify_not_save">日記を登録することができませんでした</string>
+    <string name="notify_already_post">今日の日記は既に作成されています。過去の日記を作成する場合は画面上部のカレンダーメニューをタップし、カレンダーから指定に日付をタップしてください。</string>
 
 </resources>

@@ -44,15 +44,6 @@ public class DiaryEditActivity extends AppCompatActivity {
     /**
      * <p>日記編集画面を開きます。</p>
      */
-    public static void openFromFragment(Activity activity, Fragment fragment) {
-        Intent intent = new Intent(activity, DiaryEditActivity.class);
-        fragment.startActivityForResult(intent, CALL_DIARY_EDIT_ACTIVITY_REQUEST_CODE);
-    }
-
-
-    /**
-     * <p>日記編集画面を開きます。</p>
-     */
     public static void openFromFragmentUsingPostDate(Activity activity, Fragment fragment, PostDate postDate) {
         Intent intent = new Intent(activity, DiaryEditActivity.class);
         intent.putExtra(PARAM_POST_DATE, postDate);
@@ -71,11 +62,8 @@ public class DiaryEditActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
-        postDate = PostDate.of(new Date());
+        postDate = (PostDate)getIntent().getSerializableExtra(PARAM_POST_DATE);
 
-        if (getIntent().getSerializableExtra(PARAM_POST_DATE) != null) {
-            postDate = (PostDate)getIntent().getSerializableExtra(PARAM_POST_DATE);
-        }
         getSupportActionBar().setTitle(Utils.localDate(this, postDate.value));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -113,7 +101,7 @@ public class DiaryEditActivity extends AppCompatActivity {
                 return true;
             // 保存ボタン
             case R.id.post_newDiary:
-                postEntry(editText.getText().toString(), postDate.getString());
+                postEntry(editText.getText().toString(), postDate);
                 setResult(RESULT_OK);
                 finish();
                 return true;
@@ -123,11 +111,11 @@ public class DiaryEditActivity extends AppCompatActivity {
     }
 
 
-    private void postEntry(String content, String postDate) {
+    private void postEntry(String content, PostDate postDate) {
 
         Backend.Post post = new Backend(this).post("entry")
                 .param("content", content)
-                .param("postDate", postDate);
+                .param("postDate", postDate.getString());
         if (optFileId.isPresent()){
             post.param("fileId", Long.toString(optFileId.get()));
         }

@@ -30,8 +30,26 @@ public class PostDate implements Serializable {
         return Observable.just(new PostDate(value));
     }
 
+    /**
+     * Date型からPostDateインスタンスを作成します。
+     * @param date
+     * @return
+     */
     public static PostDate of(Date date) {
         return new PostDate(date);
+    }
+
+    /**
+     * year, month, day からPostDateインスタンスを作成します。
+     * @param year
+     * @param month
+     * @param day
+     * @return
+     */
+    public static PostDate of(int year, int month, int day) {
+        final Calendar cal = Calendar.getInstance();
+        cal.set(year, month, day);
+        return new PostDate(cal.getTime());
     }
 
     /**

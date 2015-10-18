@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.slgerkamp.daily.life.core.diary.DiaryFragment;
 import com.slgerkamp.daily.life.core.diary.PostDate;
@@ -43,17 +44,25 @@ public class DiaryDatePickerDialog extends DatePickerDialog {
     /**
      * <p>
      *     インスタンス化を行う。
-     *     ・日付設定
-     *     ・カレンダーの表示領域設定
-     *     ・タップの有効領域設定
+     *     ・日付がタップされたときのcallback、callbackには下記の２つのケースのイベントハンドラを設定します
+     *     　　・ハイライトされた日付がタップされた場合
+     *     　　・ハイライトされていない日付がタップされた場合
+     *     ・今日の日付を設定
+     *     ・投稿されている日付の登録
+     *     ・カレンダーの表示日付、タップ可能日付設定
      * </p>
+     *
      * @param diaryDatePickerCallBack
      * @param year
      * @param monthOfYear
      * @param dayOfMonth
+     * @param optPostDateCalendar
      * @return
      */
-    public static DiaryDatePickerDialog newInstance(OnDiaryDatePickerClickListener diaryDatePickerCallBack, int year, int monthOfYear, int dayOfMonth
+    public static DiaryDatePickerDialog newInstance(
+            OnDiaryDatePickerClickListener diaryDatePickerCallBack,
+            int year, int monthOfYear, int dayOfMonth,
+            Optional<List<Calendar>> optPostDateCalendar
             ) {
         DiaryDatePickerDialog ret = new DiaryDatePickerDialog();
         ret.initialize(
@@ -62,13 +71,17 @@ public class DiaryDatePickerDialog extends DatePickerDialog {
                     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {}
                 },
                 year, monthOfYear, dayOfMonth);
+
         ret.diaryDatePickerCallBack = diaryDatePickerCallBack;
 
-        // カレンダーのタップの有効領域設定
+        if (optPostDateCalendar.isPresent()){
+            ret.setHighlightedDays(optPostDateCalendar.get().toArray(new Calendar[0]));
+        }
+
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, monthOfYear, dayOfMonth);
         ret.setMaxDate(calendar);
-        // カレンダーの表示領域
+
         ret.setYearRange(DAIRY_LIFE_MIN_YEAR, year + 1);
 
         return ret;
@@ -78,8 +91,6 @@ public class DiaryDatePickerDialog extends DatePickerDialog {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
-        // 投稿日をカレンダーに反映
-        setPostDate();
 
         // OK、CANCELボタンの非表示
         LinearLayout linearLayout = (LinearLayout) view.findViewById(com.wdullaer.materialdatetimepicker.R.id.done_background);
@@ -99,25 +110,14 @@ public class DiaryDatePickerDialog extends DatePickerDialog {
     public void onDayOfMonthSelected(int year, int month, int day) {
         super.onDayOfMonthSelected(year, month, day);
 
-        final Calendar cal = Calendar.getInstance();
-        cal.set(year, month, day);
-
+        PostDate postDate = PostDate.of(year, month, day);
         List<Calendar> highlightedDays = Arrays.asList(getHighlightedDays());
-        Calendar nullableCalendar =
-                Observable.from(highlightedDays).filter(new Func1<Calendar, Boolean>() {
-                    @Override
-                    public Boolean call(Calendar calendar) {
-                        return
-                                calendar.get(Calendar.YEAR) == cal.get(Calendar.YEAR)
-                                        && calendar.get(Calendar.MONTH) == cal.get(Calendar.MONTH)
-                                        && calendar.get(Calendar.DATE) == cal.get(Calendar.DATE);
-                    }
-                }).firstOrDefault(null).toBlocking().first();
+        boolean hasDate = Utils.hasDate(highlightedDays,postDate);
 
-        if (nullableCalendar != null){
-            diaryDatePickerCallBack.onHighlightedDayOfMonthSelected(year, month, day);
+        if (hasDate){
+            diaryDatePickerCallBack.onHighlightedDayOfMonthSelected(postDate);
         } else {
-            diaryDatePickerCallBack.onNotHighlightedDayOfMonthSelected(year, month, day);
+            diaryDatePickerCallBack.onNotHighlightedDayOfMonthSelected(postDate);
         }
 
         tryVibrate();
