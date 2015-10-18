@@ -35,12 +35,9 @@ import rx.subjects.AsyncSubject;
 public class Backend {
 
     private static final OkHttpClient client = new OkHttpClient();
-    // TODO ここらへんは固定値ならvalueに移行する
 
-//    private static final String domain = "192.168.1.26";
-    private static final String domain = "172.20.10.4";
-    private static final boolean secure = false;
-    private static final int port = 9000;
+    private static final String domain = "daily-life.herokuapp.com";
+    private static final boolean secure = true;
     private static final String pathPrefix = "/user/api/v1";
 
     private final Activity activity;
@@ -277,6 +274,7 @@ public class Backend {
      * スキーム、ドメイン、ポート、共通のURLパス
      */
     private static HttpUrl.Builder builder() {
+        int port = secure ? 443 : 9000;
         return new HttpUrl.Builder()
                 .scheme(secure ? "https" : "http")
                 .host(domain)

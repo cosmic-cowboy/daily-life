@@ -4,6 +4,3 @@ spring:
     datasource:
         driverClassName: org.postgresql.Driver 
 
-dailylife.file:
-    tmpstorage: /tmp/dailylife/tmpstorage
-    storage: /tmp/dailylife/storage
