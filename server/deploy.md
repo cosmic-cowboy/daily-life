@@ -25,6 +25,20 @@ git push heroku master
 heroku open
 heroku logs --tail
 ```
+#### HerokuのDB（PostgreSQL）を初期化する
+
+登録データを初期化したい場合、DBのresetコマンドを実行する。
+
+この際、実行してよいかの確認が入るので、アプリ名を入れる。
+
+その後、アプリを再起動する
+
+```
+heroku pg:reset DATABASE
+daily-life
+heroku ps:restart web.1
+```
+
 
 #### Requirements
 
