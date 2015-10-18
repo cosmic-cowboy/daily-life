@@ -14,7 +14,7 @@ public class WebEntryController {
 	 * ユーザ画面のトップページです。
 	 * @return
 	 */
-	@RequestMapping("/index")
+	@RequestMapping("/")
 	public String index() {
 		return "user/index";
 	}
