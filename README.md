@@ -11,7 +11,7 @@
 
 例）
 
-`curl -v localhost:9000/user/api/v1/entry -X GET -H "Content-Type: application/json"`
+`curl -v https://daily-life.herokuapp.com/user/api/v1/entry -X GET -H "Content-Type: application/json"`
 
 #### 指定した日記取得
 
@@ -23,11 +23,15 @@
 
 | パラメータ名 | 指定する値 | 必須 | 説明 |
 |:-----------|:--------:|:---:|:----:|
-| entryId     |日記エントリID|必須|日記エントリのIDを指定します|
+| entryId    |日記エントリID|オプション|日記エントリのIDを指定します|
+| postDate   |投稿日（YYYYMMDD）|オプション|投稿日を指定します|
 
 例）
 
-`curl -v localhost:9000/user/api/v1/entry?entryId=日記エントリID -X GET -H "Content-Type: application/json"`
+```
+curl -v https://daily-life.herokuapp.com/user/api/v1/entry?entryId=日記エントリID -X GET -H "Content-Type: application/json"`
+curl -v https://daily-life.herokuapp.com/user/api/v1/entry?postDate=20151018 -X GET -H "Content-Type: application/json"
+```
 
 #### 投稿日取得
 
@@ -37,7 +41,7 @@
 
 例）
 
-`curl -v localhost:9000/user/api/v1/entry/postdate -X GET -H "Content-Type: application/json"`
+`curl -v https://daily-life.herokuapp.com/user/api/v1/entry/postdate -X GET -H "Content-Type: application/json"`
 
 
 #### 日記投稿
@@ -51,6 +55,7 @@
 | パラメータ名 | 指定する値 | 必須 | 説明 |
 |:-----------|:--------:|:---:|:----:|
 | content    |投稿内容|必須|投稿内容を指定します|
+| postDate   |投稿日（YYYYMMDD）|必須|投稿日を指定します|
 | fileId     |ファイルID|オプション|ファイルのIDを指定します|
 
 レスポンスデータ
@@ -61,7 +66,7 @@
 
 例）
 
-`curl -v localhost:9000/user/api/v1/entry -X POST -H "Content-Type: application/json" -d "{\"content\":\"日記内容\",\"fileId\":\"00000\"}"`
+`curl -v https://daily-life.herokuapp.com/user/api/v1/entry -X POST -H "Content-Type: application/json" -d "{\"content\":\"日記内容\",\"postDate\":\"20151018\",\"fileId\":\"00000\"}"`
 
 #### 画像登録
 
@@ -79,7 +84,7 @@
 
 例）
 
-`curl -v localhost:9000/user/api/v1/entry/image -X POST -H "Content-Type: application/json" -d @画像のパス`
+`curl -v https://daily-life.herokuapp.com/user/api/v1/entry/image -X POST -H "Content-Type: application/json" -d @画像のパス`
 
 #### 画像データの取得
 
@@ -95,7 +100,7 @@
 
 例）
 
-`curl -v localhost:9000/user/api/v1/file/image?fileId=ファイルID -X GET -H "Content-Type: application/json"`
+`curl -v https://daily-life.herokuapp.com/user/api/v1/file/image?fileId=ファイルID -X GET -H "Content-Type: application/json"`
 
 #### 指定した日記の削除
 
@@ -111,10 +116,10 @@
 
 例）
 
-`curl -v localhost:9000/user/api/v1/entry?entryId=日記エントリID -X DELETE -H "Content-Type: application/json"`
+`curl -v https://daily-life.herokuapp.com/user/api/v1/entry?entryId=日記エントリID -X DELETE -H "Content-Type: application/json"`
 
 
-### DBの確認方法
+### ローカルDB（h2）の確認方法
 
 `http://localhost:9000/console/`
 
