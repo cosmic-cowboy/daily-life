@@ -229,6 +229,7 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
                 .subscribe(new Action1<List<DiaryItem>>() {
                     @Override
                     public void call(List<DiaryItem> diaryItems) {
+                        entityMap.clear();
                         for(int i = 0; i <  diaryItems.size(); i++){
                             Log.d("JSON:", diaryItems.get(i).toString());
                             entityMap.put(i, diaryItems.get(i));
