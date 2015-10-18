@@ -35,7 +35,6 @@
     <string name="cancel">いいえ</string>
 
     <string name="confirm_delete">日記を削除してよろしいですか</string>
-    <string name="notify_delete">日記を削除しました</string>
     <string name="notify_not_delete">日記を削除することができませんでした</string>
     <string name="notify_save">日記を登録しました</string>
     <string name="notify_not_save">日記を登録することができませんでした</string>

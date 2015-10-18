@@ -132,15 +132,7 @@ public class DiaryDetailActivity extends AppCompatActivity {
                                         new Action1<JSONData>() {
                                             @Override
                                             public void call(JSONData jsonData) {
-                                                new AlertDialog.Builder(DiaryDetailActivity.this)
-                                                        .setMessage(getString(R.string.notify_delete))
-                                                        .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
-                                                            @Override
-                                                            public void onClick(DialogInterface dialog, int which) {
-                                                                finish();
-                                                            }
-                                                        })
-                                                        .show();
+                                                finish();
                                             }
                                         },
                                         new Action1<Throwable>() {
