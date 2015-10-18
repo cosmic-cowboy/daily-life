@@ -16,6 +16,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.slgerkamp.daily.life.R;
 import com.slgerkamp.daily.life.generic.Backend;
@@ -47,6 +48,7 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
 
     // TODO リストが他にできたら汎用的なEntityListをつくる
     private Map<Integer, DiaryItem> entityMap;
+    private Optional<List<Calendar>> optPostDateCalendar = Optional.absent();
 
     public DiaryFragment() {
         entityMap = new HashMap<>();
@@ -57,6 +59,7 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getEntry();
+        getPostDate();
         diaryAdapter = new DiaryAdapter();
     }
 
@@ -104,7 +107,8 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
                         },
                         now.get(Calendar.YEAR),
                         now.get(Calendar.MONTH),
-                        now.get(Calendar.DAY_OF_MONTH)
+                        now.get(Calendar.DAY_OF_MONTH),
+                        optPostDateCalendar
                 );
                 dpd.show(getFragmentManager(), "DiaryDatePickerDialog");
                 return true;
@@ -130,9 +134,11 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
         switch (requestCode) {
             case DiaryEditActivity.CALL_DIARY_EDIT_ACTIVITY_REQUEST_CODE:
                 getEntry();
+                getPostDate();
                 break;
             case DiaryDetailActivity.CALL_DIARY_DETAIL_ACTIVITY_REQUEST_CODE:
                 getEntry();
+                getPostDate();
                 break;
             default:
                 break;
@@ -220,4 +226,54 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
                     }
                 });
     }
+
+    /**
+     * <p>日記の投稿日を取得する</p>
+     */
+    private void getPostDate() {
+        new Backend(getActivity()).get("entry/postdate")
+                .toObservable()
+                .flatMap(new Func1<JSONData, Observable<List<JSONData>>>() {
+                    @Override
+                    public Observable<List<JSONData>> call(JSONData json) {
+                        return json.getList("entryList");
+                    }
+                })
+                .map(new Func1<List<JSONData>, List<PostDate>>() {
+                    @Override
+                    public List<PostDate> call(List<JSONData> jsonData) {
+
+                        ImmutableList.Builder<PostDate> builder = new ImmutableList.Builder<>();
+                        for (JSONData d : jsonData) {
+                            PostDate postDate = d.getLong("postDate").flatMap(new Func1<Long, Observable<PostDate>>() {
+                                @Override
+                                public Observable<PostDate> call(Long l) {
+                                    return PostDate.from(l);
+                                }
+                            }).toBlocking().lastOrDefault(null);
+                            if (postDate != null) {
+                                builder.add(postDate);
+                            } else {
+                                Log.e(DiaryFragment.class.getSimpleName(), "invalid data: " + d);
+                            }
+                        }
+                        return builder.build();
+                    }
+                })
+                .subscribe(new Action1<List<PostDate>>() {
+                    @Override
+                    public void call(List<PostDate> postDates) {
+                        List<Calendar> postDateCalendar = Observable.from(postDates)
+                                .map(new Func1<PostDate, Calendar>() {
+                                    @Override
+                                    public Calendar call(PostDate postDate) {
+                                        return postDate.toCalendar();
+                                    }
+                                })
+                                .toList().toBlocking().single();
+                        optPostDateCalendar = Optional.of(postDateCalendar);
+                    }
+                });
+    }
+
 }
