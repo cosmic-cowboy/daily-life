@@ -1,6 +1,20 @@
 # daily-life
 日々のできごと、見たこと、感じたこと、印象に残ったことを自分のために書く日記アプリ
 
+
+### Herokuへのデプロイ
+
+[Heroku への デプロイ手順](server/deploy.md)
+
+### リリース用APKの作成
+
+[リリース用APKの作成](client/android/build.md)
+
+
+### 今後のロードマップ
+
+[計画書](PLAN.md)
+
 ### 各APIについて
 
 #### 日記取得
@@ -124,11 +138,3 @@ curl -v https://daily-life.herokuapp.com/user/api/v1/entry?postDate=20151018 -X 
 `http://localhost:9000/console/`
 
 にアクセスし、driverClassName, url, username, passwordを入力
-
-### Herokuへのデプロイ
-
-[Heroku への デプロイ手順](server/deploy.md)
-
-### 今後のロードマップ
-
-[計画書](PLAN.md)
