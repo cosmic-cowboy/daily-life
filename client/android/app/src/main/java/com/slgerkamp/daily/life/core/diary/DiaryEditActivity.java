@@ -27,7 +27,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.Date;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
@@ -36,8 +36,8 @@ public class DiaryEditActivity extends AppCompatActivity {
     private static final String PARAM_POST_DATE = "postDate";
     public static final int CALL_DIARY_EDIT_ACTIVITY_REQUEST_CODE = 123;
 
-    @InjectView(R.id.message_image) ImageView imageView;
-    @InjectView(R.id.message_input) EditText editText;
+    @Bind(R.id.message_image) ImageView imageView;
+    @Bind(R.id.message_input) EditText editText;
     Optional<Long> optFileId;
     PostDate postDate;
 
@@ -57,7 +57,7 @@ public class DiaryEditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         optFileId = Optional.absent();
         setContentView(R.layout.activity_diary_edit);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);

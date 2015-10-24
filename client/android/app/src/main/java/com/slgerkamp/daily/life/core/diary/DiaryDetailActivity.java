@@ -26,7 +26,7 @@ import com.slgerkamp.daily.life.infra.Utils;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -40,8 +40,8 @@ public class DiaryDetailActivity extends AppCompatActivity {
     private static final String PARAM_POST_DATE = "postDate";
     public static final int CALL_DIARY_DETAIL_ACTIVITY_REQUEST_CODE = 124;
 
-    @InjectView(R.id.message_image) ImageView imageView;
-    @InjectView(R.id.message_content) TextView textView;
+    @Bind(R.id.message_image) ImageView imageView;
+    @Bind(R.id.message_content) TextView textView;
     private DiaryId diaryId;
 
     /**
@@ -67,7 +67,7 @@ public class DiaryDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_diary_detail);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

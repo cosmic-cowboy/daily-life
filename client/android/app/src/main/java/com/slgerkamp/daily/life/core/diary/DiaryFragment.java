@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -43,8 +43,8 @@ import rx.functions.Func1;
  */
 public class DiaryFragment extends Fragment implements AbsListView.OnItemClickListener{
 
-    @InjectView(android.R.id.list) AbsListView listView;
-    @InjectView(R.id.first_fab) FloatingActionButton fab;
+    @Bind(android.R.id.list) AbsListView listView;
+    @Bind(R.id.first_fab) FloatingActionButton fab;
 
     private DiaryAdapter diaryAdapter;
 
@@ -69,7 +69,7 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
         View view = inflater.inflate(R.layout.diary_fragment, container, false);
         setHasOptionsMenu(true);
 
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
 
         listView.setAdapter(diaryAdapter);
         listView.setOnItemClickListener(this);

@@ -25,7 +25,7 @@ import java.io.InputStream;
 
 import okio.BufferedSink;
 import rx.Observable;
-import rx.android.app.AppObservable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.subjects.AsyncSubject;
 
@@ -219,18 +219,22 @@ public class Backend {
             });
 
             // 2. レスポンスをハンドリング
-            return AppObservable.bindActivity(activity, responseSubject.flatMap(new Func1<Response, Observable<JSONData>>() {
-                @Override
-                public Observable<JSONData> call(Response res) {
-                    try {
-                        Log.d(Backend.class.getSimpleName(), res.toString());
-                        return processResponse(res);
+            return responseSubject
+                    .flatMap(new Func1<Response, Observable<JSONData>>() {
+                        @Override
+                        public Observable<JSONData> call(Response res) {
+                            try {
+                                Log.d(Backend.class.getSimpleName(), res.toString());
+                                return processResponse(res);
 
-                    } catch (IOException ex) {
-                        return Observable.error(ex);
-                    }
-                }
-            }));
+                            } catch (IOException ex) {
+                                return Observable.error(ex);
+                            }
+
+                        }
+                    })
+                    .observeOn(AndroidSchedulers.mainThread());
+
         }
 
         /**
