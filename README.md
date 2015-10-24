@@ -2,18 +2,11 @@
 日々のできごと、見たこと、感じたこと、印象に残ったことを自分のために書く日記アプリ
 
 
-### Herokuへのデプロイ
+### [Herokuへのデプロイ](server/deploy.md)
 
-[Heroku への デプロイ手順](server/deploy.md)
+### [リリース用APKの作成](client/android/build.md)
 
-### リリース用APKの作成
-
-[リリース用APKの作成](client/android/build.md)
-
-
-### 今後のロードマップ
-
-[計画書](PLAN.md)
+### [今後のロードマップ](PLAN.md)
 
 ### 各APIについて
 
