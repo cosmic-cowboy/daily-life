@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import com.slgerkamp.daily.life.R;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 
 /**
  * <p>画像を全画面で表示するためのダイアログ</p>
@@ -24,8 +24,8 @@ public class ImageFullscreenDialog extends DialogFragment{
 
     private static final String PARAM_FILE_ID = "fileId";
 
-    @InjectView(R.id.image_view) ImageView imageView;
-    @InjectView(R.id.cancel) ImageButton cancel;
+    @Bind(R.id.image_view) ImageView imageView;
+    @Bind(R.id.cancel) ImageButton cancel;
 
     public static ImageFullscreenDialog newInstance(Long fileId) {
 
@@ -45,7 +45,7 @@ public class ImageFullscreenDialog extends DialogFragment{
 
         LayoutInflater layoutInflater = getActivity().getLayoutInflater();
         View root = layoutInflater.inflate(R.layout.image_fullscreen_dialog, null);
-        ButterKnife.inject(this, root);
+        ButterKnife.bind(this, root);
 
         new Backend(getActivity()).imageLoader().load(fileId).into(imageView);
 

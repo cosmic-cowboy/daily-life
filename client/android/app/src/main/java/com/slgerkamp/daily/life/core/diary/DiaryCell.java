@@ -12,19 +12,19 @@ import com.slgerkamp.daily.life.generic.Backend;
 import com.slgerkamp.daily.life.infra.Utils;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 
 /**
  * <p>日記一覧のリストアイテムを管理するクラスです。
  */
 public class DiaryCell {
 
-    @InjectView(R.id.post_date) TextView post_date;
-    @InjectView(R.id.content) TextView content;
-    @InjectView(R.id.picture) ImageView picture;
+    @Bind(R.id.post_date) TextView post_date;
+    @Bind(R.id.content) TextView content;
+    @Bind(R.id.picture) ImageView picture;
 
     public DiaryCell(View view){
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
     }
 
     public void setItem(DiaryItem item, Context context, Backend.ImageLoader loader) {
