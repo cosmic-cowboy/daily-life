@@ -9,12 +9,28 @@ android {
         minSdkVersion 19
         targetSdkVersion 22
         versionCode 1
-        versionName "1.0"
+        versionName "0.9.1"
     }
+
+    signingConfigs {
+        release {
+            def signFile = file("${System.getenv('HOME')}/keys/daily-life.signconfig.gradle")
+            def signingProps = new Properties()
+            signingProps.load(new FileInputStream(signFile))
+
+            storeFile file("${System.getenv('HOME')}/keys/daily-life-release.jks")
+            storePassword signingProps['storePassword']
+            keyAlias "daily-life"
+            keyPassword signingProps['keyPassword']
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            signingConfig signingConfigs.release
         }
     }
 }
