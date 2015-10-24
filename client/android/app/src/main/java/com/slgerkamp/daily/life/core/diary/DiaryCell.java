@@ -39,6 +39,12 @@ public class DiaryCell {
             int paddingSize = context.getResources().getDimensionPixelSize(R.dimen.list_image_padding_size);
             picture.setPadding(paddingSize, paddingSize, paddingSize, paddingSize);
             loader.load(item.optFileId.get()).into(picture);
+        } else {
+            int defaultSize = context.getResources().getDimensionPixelSize(R.dimen.list_image_default_size);
+            picture.getLayoutParams().height = defaultSize;
+            picture.getLayoutParams().width = defaultSize;
+            picture.setPadding(defaultSize, defaultSize, defaultSize, defaultSize);
+            picture.setImageBitmap(null);
         }
     }
 
