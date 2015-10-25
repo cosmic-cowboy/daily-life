@@ -2,13 +2,20 @@
 日々のできごと、見たこと、感じたこと、印象に残ったことを自分のために書く日記アプリ
 
 
-### [Herokuへのデプロイ](server/deploy.md)
+## 今後のロードマップ
+-  [計画書](PLAN.md)
 
-### [リリース用APKの作成](client/android/build.md)
+## 成果物
 
-### [今後のロードマップ](PLAN.md)
+-  [リリース](https://github.com/cosmic-cowboy/daily-life/releases)
 
-### 各APIについて
+## ビルド
+
+ - サーバー： [Heroku への デプロイ手順](server/deploy.md)
+ - クライアント： [リリース用APKの作成](client/android/build.md)
+
+
+## 各APIについて
 
 #### 日記取得
 
@@ -126,7 +133,7 @@ curl -v https://daily-life.herokuapp.com/user/api/v1/entry?postDate=20151018 -X 
 `curl -v https://daily-life.herokuapp.com/user/api/v1/entry?entryId=日記エントリID -X DELETE -H "Content-Type: application/json"`
 
 
-### ローカルDB（h2）の確認方法
+## ローカルDB（h2）の確認方法
 
 `http://localhost:9000/console/`
 
