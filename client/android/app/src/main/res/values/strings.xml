@@ -5,7 +5,7 @@
     共通・タイトル
         ================================================================-->
 
-    <string name="app_name">Daily-life</string>
+    <string name="app_name">Daily Life</string>
     <string name="diary_list">日記一覧</string>
     <string name="action_new_diary">日記作成</string>
     <string name="action_edit_diary">日記編集</string>
