@@ -5,7 +5,7 @@
 
     <item android:id="@+id/open_image_dialog"
         android:title="@string/button_camera"
-        android:icon="@android:drawable/ic_menu_camera"
+        android:icon="@drawable/ic_photo_camera_white_24dp"
         app:showAsAction="ifRoom"
         />
     <item android:id="@+id/post_newDiary"
