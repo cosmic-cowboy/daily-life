@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.ByteStreams;
+import com.slgerkamp.daily.life.R;
 import com.slgerkamp.daily.life.infra.JSONData;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.HttpUrl;
@@ -269,7 +270,9 @@ public class Backend {
                     .build();
 
             Log.d(Backend.class.getSimpleName(), "image: " + url);
-            return picasso.load(url.toString());
+            RequestCreator requestCreator = picasso.load(url.toString());
+            requestCreator.placeholder(R.drawable.image_placeholder);
+            return requestCreator;
         }
     }
 
