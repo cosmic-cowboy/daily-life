@@ -20,6 +20,10 @@ ServiceAPI.prototype.get = function(params, type) {
 	});
 };
 
+ServiceAPI.prototype.url = function() {
+	return this.url;
+};
+
 ServiceAPI.prototype.post = function(params, type) {
 	type = type || 'json';
 

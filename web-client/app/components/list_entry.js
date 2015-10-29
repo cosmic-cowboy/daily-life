@@ -28,10 +28,18 @@ var ListEntry = React.createClass({
 
 	render: function () {
 		var entries = this.state.data.map(function (entry) {
+			var fileId = entry.fileId;
+			var fileUrl;
+			if (fileId) {
+				var url = service.api("/user/api/v1/file/image?fileId="+fileId).url;
+				fileUrl = <img src={url} />;
+			}
+			var entryId = parseInt(entry.entryId);
 			return (
-				<div className="entry">
+				<div key={entryId} className="entry" >
 					<h4 className="text-center">{entry.postDate}</h4>
 					<hr/>
+					{fileUrl}
 					<p>{entry.content}</p>
 				</div>
 			);
