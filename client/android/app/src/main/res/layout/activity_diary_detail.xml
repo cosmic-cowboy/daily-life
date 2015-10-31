@@ -29,12 +29,12 @@
 
             <TextView
                 android:id="@+id/message_content"
-                android:layout_marginTop="@dimen/detail_text_margin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/anchor"
                 android:scrollbars="vertical"
                 android:layout_margin="@dimen/detail_text_margin"
+                android:paddingTop="@dimen/detail_text_margin"
                 android:autoLink="web"
                 />
 
