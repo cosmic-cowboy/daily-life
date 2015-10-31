@@ -27,6 +27,9 @@ var ListEntry = React.createClass({
 	},
 
 	render: function () {
+		var contentStyle = {
+			wordBreak: 'break-all'
+		};
 		var entries = this.state.data.map(function (entry) {
 			var fileId = entry.fileId;
 			var fileUrl;
@@ -40,7 +43,7 @@ var ListEntry = React.createClass({
 					<h4 className="text-center">{entry.postDate}</h4>
 					<hr/>
 					{fileUrl}
-					<p>{entry.content}</p>
+					<p style={contentStyle}>{entry.content}</p>
 				</div>
 			);
 		});
