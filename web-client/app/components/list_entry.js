@@ -27,6 +27,10 @@ var ListEntry = React.createClass({
 	},
 
 	render: function () {
+		var self = this;
+		var contentStyle = {
+			wordBreak: 'break-all'
+		};
 		var entries = this.state.data.map(function (entry) {
 			var fileId = entry.fileId;
 			var fileUrl;
@@ -34,13 +38,15 @@ var ListEntry = React.createClass({
 				var url = service.api("/user/api/v1/file/image?fileId="+fileId).url;
 				fileUrl = <img src={url} />;
 			}
+			var content = self._nl2br(entry.content);
 			var entryId = parseInt(entry.entryId);
 			return (
 				<div key={entryId} className="entry" >
 					<h4 className="text-center">{entry.postDate}</h4>
 					<hr/>
 					{fileUrl}
-					<p>{entry.content}</p>
+					// あまり褒められた実装ではないので、暫定対応
+					<p style={contentStyle} dangerouslySetInnerHTML={{__html: content}}></p>
 				</div>
 			);
 		});
@@ -51,6 +57,10 @@ var ListEntry = React.createClass({
 				</div>
 			</div>
 		);
+	},
+
+	_nl2br : function(content){
+		return (content + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + '<br />' + '$2');
 	}
 });
 
