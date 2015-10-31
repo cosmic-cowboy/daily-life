@@ -31,7 +31,7 @@
         編集画面
         ================================================================-->
 
-    <dimen name="parallax_image_height">200dp</dimen>
+    <dimen name="parallax_image_height">250dp</dimen>
     <dimen name="edit_text_width_padding">10dp</dimen>
     <dimen name="edit_text_height_padding">20dp</dimen>
     
