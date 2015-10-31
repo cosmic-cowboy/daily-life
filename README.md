@@ -13,6 +13,7 @@
 
  - サーバー： [Heroku への デプロイ手順](server/deploy.md)
  - クライアント： [リリース用APKの作成](client/android/build.md)
+ - サンプルデータ： [サンプルデータの作成方法](sample/sample-data.md)
 
 
 ## 各APIについて
