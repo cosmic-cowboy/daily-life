@@ -29,6 +29,7 @@
 
             <TextView
                 android:id="@+id/message_content"
+                android:layout_marginTop="@dimen/detail_text_margin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/anchor"
@@ -53,7 +54,7 @@
         android:layout_width="match_parent"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
-        android:theme="@style/AppToolBar"
+        android:theme="@style/AppTransparentToolBar"
         app:popupTheme="@style/Theme.AppCompat.Light.DarkActionBar"
         android:elevation="@dimen/toolbar_elevation" />
     
