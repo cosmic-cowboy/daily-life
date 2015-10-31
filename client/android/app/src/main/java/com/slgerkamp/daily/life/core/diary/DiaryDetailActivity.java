@@ -56,9 +56,10 @@ public class DiaryDetailActivity extends AppCompatActivity implements Observable
     /**
      * <p>日記詳細画面を開きます。</p>
      */
-    public static void openFromFragment(Activity activity, Fragment fragment, DiaryId diaryId) {
+    public static void openFromFragment(Activity activity, Fragment fragment, DiaryId diaryId, PostDate postDate) {
         Intent intent = new Intent(activity, DiaryDetailActivity.class);
         intent.putExtra(PARAM_DIARY_ID, diaryId);
+        intent.putExtra(PARAM_POST_DATE, postDate);
         fragment.startActivityForResult(intent, CALL_DIARY_DETAIL_ACTIVITY_REQUEST_CODE);
     }
 
@@ -82,12 +83,13 @@ public class DiaryDetailActivity extends AppCompatActivity implements Observable
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setBackgroundColor(ScrollUtils.getColorWithAlpha(0, ContextCompat.getColor(this, R.color.nav_bar)));
 
+        PostDate postDate = (PostDate)getIntent().getSerializableExtra(PARAM_POST_DATE);
+        getSupportActionBar().setTitle(Utils.localDate(getParent(), postDate.value));
+
         if (getIntent().getSerializableExtra(PARAM_DIARY_ID) != null){
             diaryId = (DiaryId) getIntent().getSerializableExtra(PARAM_DIARY_ID);
             getEntry(diaryId);
-        };
-        if (getIntent().getSerializableExtra(PARAM_POST_DATE) != null){
-            PostDate postDate = (PostDate)getIntent().getSerializableExtra(PARAM_POST_DATE);
+        } else {
             getEntry(postDate);
         };
 

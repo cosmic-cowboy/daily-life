@@ -17,7 +17,6 @@
         app:layout_column="0"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:title="@string/action_edit_diary"
         android:theme="@style/AppToolBar"
         app:popupTheme="@style/AppTheme"
         android:elevation="@dimen/toolbar_elevation" />
