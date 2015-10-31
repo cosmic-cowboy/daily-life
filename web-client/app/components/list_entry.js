@@ -45,7 +45,6 @@ var ListEntry = React.createClass({
 					<h4 className="text-center">{entry.postDate}</h4>
 					<hr/>
 					{fileUrl}
-					// あまり褒められた実装ではないので、暫定対応
 					<p style={contentStyle} dangerouslySetInnerHTML={{__html: content}}></p>
 				</div>
 			);
