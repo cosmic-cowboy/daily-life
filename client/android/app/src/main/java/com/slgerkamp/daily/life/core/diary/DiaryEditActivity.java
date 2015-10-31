@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -18,6 +19,7 @@ import com.google.common.base.Optional;
 import com.slgerkamp.daily.life.MainActivity;
 import com.slgerkamp.daily.life.R;
 import com.slgerkamp.daily.life.generic.Backend;
+import com.slgerkamp.daily.life.generic.ImageFullscreenDialog;
 import com.slgerkamp.daily.life.generic.ImageSelectionWizard;
 import com.slgerkamp.daily.life.infra.JSONData;
 import com.slgerkamp.daily.life.infra.Utils;
@@ -168,6 +170,16 @@ public class DiaryEditActivity extends AppCompatActivity {
                         new Backend(DiaryEditActivity.this).imageLoader()
                                 .load(id).into(imageView);
                         optFileId = Optional.of(id);
+
+                        imageView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                ImageFullscreenDialog
+                                        .newInstance(optFileId.get())
+                                        .show(DiaryEditActivity.this.getFragmentManager(), "imageFullScreen");
+                            }
+                        });
+
                     }
                 }
         );
