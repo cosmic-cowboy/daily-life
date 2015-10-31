@@ -15,6 +15,6 @@ do
 	fileName=${DIR}${COUNT}.jpg
  	fileId=`curl ${domain}'user/api/v1/entry/image' -X POST --data-binary '@'${fileName} -H 'Content-Type: image/jpeg' |  jq '.["fileId"]'`;
  	echo ${fileId}
-	message="{\"content\":\"${line}\",\"postDate\":\"201508${COUNT}\",\"fileId\":${fileId}}"
+	message="{\"content\":\"${line}\",\"postDate\":\"201510${COUNT}\",\"fileId\":${fileId}}"
 	curl ${domain}'user/api/v1/entry' -X POST -H "Content-Type: application/json" -d ${message}
 done
