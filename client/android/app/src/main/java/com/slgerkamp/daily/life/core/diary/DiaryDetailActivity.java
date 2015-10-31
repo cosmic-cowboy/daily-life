@@ -46,6 +46,7 @@ public class DiaryDetailActivity extends AppCompatActivity implements Observable
     public static final int CALL_DIARY_DETAIL_ACTIVITY_REQUEST_CODE = 124;
 
     private int mParallaxImageHeight;
+    @Bind(R.id.anchor) View view;
     @Bind(R.id.message_image) ImageView imageView;
     @Bind(R.id.message_content) TextView textView;
     @Bind(R.id.toolbar)  Toolbar toolbar;
@@ -221,6 +222,9 @@ public class DiaryDetailActivity extends AppCompatActivity implements Observable
                         textView.setText(item.content);
                         if (item.optFileId.isPresent()) {
                             setUpImageId(item.optFileId.get());
+                        } else {
+                            toolbar.setBackgroundColor(ContextCompat.getColor(DiaryDetailActivity.this, R.color.nav_bar));
+                            view.getLayoutParams().height=0;
                         }
                     }
                 });
