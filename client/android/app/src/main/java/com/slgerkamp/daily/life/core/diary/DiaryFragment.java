@@ -163,7 +163,7 @@ public class DiaryFragment extends Fragment implements AbsListView.OnItemClickLi
         Activity activity = getActivity();
         Object item = entityMap.get(position);
         if (item instanceof DiaryItem) {
-            DiaryDetailActivity.openFromFragment(getActivity(), this, ((DiaryItem) item).diaryId);
+            DiaryDetailActivity.openFromFragment(getActivity(), this, ((DiaryItem) item).diaryId, ((DiaryItem) item).postDate );
         }
     }
 

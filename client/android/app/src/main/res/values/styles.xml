@@ -10,6 +10,10 @@
         <item name="android:background">@color/nav_bar</item>
     </style>
 
+    <style name="AppTransparentToolBar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
     <style name="SmallerText" parent="TextAppearance.AppCompat.Small">
         <item name="android:textSize">12dp</item>
     </style>

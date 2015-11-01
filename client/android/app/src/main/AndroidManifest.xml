@@ -24,7 +24,6 @@
 
         <activity
             android:name=".core.diary.DiaryEditActivity"
-            android:label="@string/action_edit_diary"
             android:parentActivityName=".MainActivity"
             android:windowSoftInputMode="adjustResize" >
             <meta-data
@@ -34,7 +33,6 @@
 
         <activity
             android:name=".core.diary.DiaryDetailActivity"
-            android:label="@string/action_edit_diary"
             android:parentActivityName=".MainActivity"
             android:windowSoftInputMode="adjustResize" >
             <meta-data
