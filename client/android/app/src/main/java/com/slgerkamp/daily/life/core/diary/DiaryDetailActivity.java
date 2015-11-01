@@ -226,7 +226,7 @@ public class DiaryDetailActivity extends AppCompatActivity implements Observable
                             setUpImageId(item.optFileId.get());
                         } else {
                             toolbar.setBackgroundColor(ContextCompat.getColor(DiaryDetailActivity.this, R.color.nav_bar));
-                            view.getLayoutParams().height=0;
+                            view.getLayoutParams().height=toolbar.getHeight();
                         }
                     }
                 });
