@@ -122,16 +122,10 @@ public class DiaryEditActivity extends AppCompatActivity {
             post.param("fileId", Long.toString(optFileId.get()));
         }
         post.toObservable()
-                .map(new Func1<JSONData, DiaryItem>() {
+                .subscribe(new Action1<JSONData>() {
                     @Override
-                    public DiaryItem call(JSONData json) {
-                        return DiaryItem.fromJSON(json).toBlocking().lastOrDefault(null);
-                    }
-                })
-                .subscribe(new Action1<DiaryItem>() {
-                    @Override
-                    public void call(DiaryItem diaryItem) {
-                        Log.e(DiaryEditActivity.class.getSimpleName(), "送信完了 : " + diaryItem);
+                    public void call(JSONData json) {
+                        Log.v(DiaryEditActivity.class.getSimpleName(), "送信完了 : " + json);
                     }
                 });
     }
