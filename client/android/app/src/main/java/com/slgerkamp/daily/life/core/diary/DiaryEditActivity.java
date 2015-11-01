@@ -2,6 +2,7 @@ package com.slgerkamp.daily.life.core.diary;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -30,6 +31,7 @@ import java.util.Date;
 
 import butterknife.ButterKnife;
 import butterknife.Bind;
+import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
@@ -103,17 +105,36 @@ public class DiaryEditActivity extends AppCompatActivity {
                 return true;
             // 保存ボタン
             case R.id.post_newDiary:
-                postEntry(editText.getText().toString(), postDate);
-                setResult(RESULT_OK);
-                finish();
-                return true;
+                Observable post = postEntry(editText.getText().toString(), postDate);
+
+                post.subscribe(
+                        new Action1<JSONData>() {
+                            @Override
+                            public void call(JSONData json) {
+                                Log.v(DiaryEditActivity.class.getSimpleName(), "送信完了 : " + json);
+                                setResult(RESULT_OK);
+                                finish();
+                            }
+                        },
+                        new Action1<Throwable>() {
+                            @Override
+                            public void call(Throwable throwable) {
+                                new AlertDialog.Builder(DiaryEditActivity.this)
+                                        .setMessage(getString(R.string.notify_not_save))
+                                        .setPositiveButton(getString(R.string.ok), null)
+                                        .show();
+                            }
+                        }
+
+                );
+
         }
 
         return super.onOptionsItemSelected(item);
     }
 
 
-    private void postEntry(String content, PostDate postDate) {
+    private Observable postEntry(String content, PostDate postDate) {
 
         Backend.Post post = new Backend(this).post("entry")
                 .param("content", content)
@@ -121,19 +142,7 @@ public class DiaryEditActivity extends AppCompatActivity {
         if (optFileId.isPresent()){
             post.param("fileId", Long.toString(optFileId.get()));
         }
-        post.toObservable()
-                .map(new Func1<JSONData, DiaryItem>() {
-                    @Override
-                    public DiaryItem call(JSONData json) {
-                        return DiaryItem.fromJSON(json).toBlocking().lastOrDefault(null);
-                    }
-                })
-                .subscribe(new Action1<DiaryItem>() {
-                    @Override
-                    public void call(DiaryItem diaryItem) {
-                        Log.e(DiaryEditActivity.class.getSimpleName(), "送信完了 : " + diaryItem);
-                    }
-                });
+        return post.toObservable();
     }
 
     private void updateImage(Bitmap bitmap) {
