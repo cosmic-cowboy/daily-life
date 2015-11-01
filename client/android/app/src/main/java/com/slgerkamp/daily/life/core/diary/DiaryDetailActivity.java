@@ -46,6 +46,7 @@ public class DiaryDetailActivity extends AppCompatActivity implements Observable
     public static final int CALL_DIARY_DETAIL_ACTIVITY_REQUEST_CODE = 124;
 
     private int mParallaxImageHeight;
+    private boolean hasPhoto = false;
     @Bind(R.id.anchor) View view;
     @Bind(R.id.message_image) ImageView imageView;
     @Bind(R.id.message_content) TextView textView;
@@ -223,6 +224,7 @@ public class DiaryDetailActivity extends AppCompatActivity implements Observable
                         getSupportActionBar().setTitle(Utils.localDate(getParent(), item.postDate.value));
                         textView.setText(item.content);
                         if (item.optFileId.isPresent()) {
+                            hasPhoto = true;
                             setUpImageId(item.optFileId.get());
                         } else {
                             toolbar.setBackgroundColor(ContextCompat.getColor(DiaryDetailActivity.this, R.color.nav_bar));
@@ -258,10 +260,12 @@ public class DiaryDetailActivity extends AppCompatActivity implements Observable
 
     @Override
     public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
-        int baseColor = ContextCompat.getColor(this, R.color.nav_bar);
-        float alpha = Math.min(1, (float) scrollY / mParallaxImageHeight);
-        toolbar.setBackgroundColor(ScrollUtils.getColorWithAlpha(alpha, baseColor));
-        imageView.setTranslationY(scrollY / 10);
+        if (hasPhoto) {
+            int baseColor = ContextCompat.getColor(this, R.color.nav_bar);
+            float alpha = Math.min(1, (float) scrollY / mParallaxImageHeight);
+            toolbar.setBackgroundColor(ScrollUtils.getColorWithAlpha(alpha, baseColor));
+            imageView.setTranslationY(scrollY / 10);
+        }
     }
 
     @Override
