@@ -1,16 +1,16 @@
 # アプリ紹介
 
 #### 日記一覧
-![](demonstration/list-ffmpeg-palette.gif)
+![](list-ffmpeg-palette.gif)
 
 #### 日記作成
-![](demonstration/create-ffmpeg-palette.gif)
+![](create-ffmpeg-palette.gif)
 
 #### 日記詳細
-![](demonstration/detail-ffmpeg-palette.gif)
+![](detail-ffmpeg-palette.gif)
 
 #### カレンダー機能
-![](demonstration/calendar-ffmpeg-palette.gif)
+![](calendar-ffmpeg-palette.gif)
 
 
 # アプリ紹介動画の作成方法

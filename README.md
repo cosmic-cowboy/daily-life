@@ -3,6 +3,8 @@
 
 ![](demonstration/list-ffmpeg-palette.gif)
 
+その他のデモは[こちら](demonstration/README.md)へ
+
 ## 今後のロードマップ
 -  [計画書](PLAN.md)
 
