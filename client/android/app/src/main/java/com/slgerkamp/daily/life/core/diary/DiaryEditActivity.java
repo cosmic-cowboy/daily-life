@@ -27,13 +27,12 @@ import com.slgerkamp.daily.life.infra.Utils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.util.Date;
 
 import butterknife.ButterKnife;
 import butterknife.Bind;
 import rx.Observable;
 import rx.functions.Action1;
-import rx.functions.Func1;
+
 
 public class DiaryEditActivity extends AppCompatActivity {
 
@@ -105,7 +104,7 @@ public class DiaryEditActivity extends AppCompatActivity {
                 return true;
             // 保存ボタン
             case R.id.post_newDiary:
-                Observable post = postEntry(editText.getText().toString(), postDate);
+                Observable<JSONData> post = postEntry(editText.getText().toString(), postDate);
 
                 post.subscribe(
                         new Action1<JSONData>() {
@@ -134,7 +133,7 @@ public class DiaryEditActivity extends AppCompatActivity {
     }
 
 
-    private Observable postEntry(String content, PostDate postDate) {
+    private Observable<JSONData> postEntry(String content, PostDate postDate) {
 
         Backend.Post post = new Backend(this).post("entry")
                 .param("content", content)
@@ -167,8 +166,7 @@ public class DiaryEditActivity extends AppCompatActivity {
 
     private void setUpImage(JSONData json){
 
-        int displaySize = getResources().getDimensionPixelSize(R.dimen.list_image_size);
-        imageView.getLayoutParams().height = displaySize;
+        imageView.getLayoutParams().height = getResources().getDimensionPixelSize(R.dimen.list_image_size);
         int paddingSize = getResources().getDimensionPixelSize(R.dimen.list_image_padding_size);
         imageView.setPadding(paddingSize, paddingSize, paddingSize, paddingSize);
 
