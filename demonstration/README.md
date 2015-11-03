@@ -1,0 +1,20 @@
+# アプリ紹介動画の作成方法
+
+#### 動画の作成
+
+QuickTime Player で、Android（Genymotion）の動画を作成する 
+
+参考
+http://tokyo.secret.jp/macs/mt-quicktime-rec.html
+
+
+#### GIFの作成方法
+
+
+```
+ffmpeg -i create.mov -vf fps=20,palettegen=stats_mode=diff -y create-palette.png
+ffmpeg -i create.mov -i create-palette.png -lavfi fps=20,paletteuse -y create-ffmpeg-palette.gif
+```
+
+参考
+http://genjiapp.com/blog/2015/05/05/generating-much-better-animated-gif-from-movie-file.html

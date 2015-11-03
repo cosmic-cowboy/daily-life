@@ -1,6 +1,10 @@
-# daily-life
+# Daily Life
 日々のできごと、見たこと、感じたこと、印象に残ったことを自分のために書く日記アプリ
 
+![](demonstration/list-ffmpeg-palette.gif)
+![](demonstration/create-ffmpeg-palette.gif)
+![](demonstration/detail-ffmpeg-palette.gif)
+![](demonstration/calendar-ffmpeg-palette.gif)
 
 ## 今後のロードマップ
 -  [計画書](PLAN.md)
