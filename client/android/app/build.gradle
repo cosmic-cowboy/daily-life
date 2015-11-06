@@ -1,4 +1,14 @@
+// ================================================================
+//     アプリケーション固有の設定
+// ================================================================
+
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+
+// ----------------------------------------------------------------
+//     基本設定
+// ----------------------------------------------------------------
 
 android {
     compileSdkVersion 23
@@ -35,6 +45,15 @@ android {
     }
 }
 
+
+// ----------------------------------------------------------------
+//     依存関係
+// ----------------------------------------------------------------
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:23.1.0'
@@ -50,4 +69,21 @@ dependencies {
     compile 'com.wdullaer:materialdatetimepicker:1.5.3'
     compile 'com.github.ksoichiro:android-observablescrollview:1.6.0'
     compile 'com.commit451:PhotoView:1.2.4'
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {
+        transitive = true;
+    }
+}
+
+// ----------------------------------------------------------------
+//     その他追加のタスク
+// ----------------------------------------------------------------
+
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
 }
